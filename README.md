@@ -8,7 +8,7 @@ Este projeto consiste em uma API desenvolvida usando o framework ASP.NET durante
 
 ## Como Usar
 1. Clone este repositório: `git clone git@github.com:victor-azevedo/dot-pix.git`
-2. Navegue até o diretório do projeto: `cd dot-pix`
+2. Navegue até o diretório do projeto: `cd dot-pix/DotPix`
 3. Execute a aplicação: `dotnet run`
 
 ## 🚧 Em Contrução 🚧
