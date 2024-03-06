@@ -1,6 +1,21 @@
+using DotPix.Data;
 using DotPix.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Database
+builder.Services.AddDbContext<AppDbContext>(opts =>
+{
+    string host = builder.Configuration["Database:Host"] ?? string.Empty;
+    string port = builder.Configuration["Database:Port"] ?? string.Empty;
+    string username = builder.Configuration["Database:Username"] ?? string.Empty;
+    string database = builder.Configuration["Database:Name"] ?? string.Empty;
+    string password = builder.Configuration["Database:Password"] ?? string.Empty;
+
+    string connectionString = $"Host={host};Port={port};Username={username};Password={password};Database={database}";
+    opts.UseNpgsql(connectionString);
+});
 
 // Add services to the container.
 builder.Services.AddControllers();
