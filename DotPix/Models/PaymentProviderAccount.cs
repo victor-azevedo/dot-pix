@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DotPix.Models;
 
-[Table("payment_provider_tokens")]
-public class PaymentProviderToken(string token)
+[Table("payment_provider_accounts")]
+public class PaymentProviderAccount(string account, string agency)
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -12,8 +12,12 @@ public class PaymentProviderToken(string token)
     public int Id { get; set; }
 
     [Required]
-    [Column("token", TypeName = "varchar(255)")]
-    public string Token { get; set; } = token;
+    [Column("account", TypeName = "varchar(20)")]
+    public string Account { get; set; } = account;
+
+    [Required]
+    [Column("agency", TypeName = "varchar(20)")]
+    public string Agency { get; set; } = agency;
 
     [Column("created_at")]
     public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
@@ -26,4 +30,10 @@ public class PaymentProviderToken(string token)
     public int PaymentProviderId { get; set; }
 
     public PaymentProvider PaymentProvider { get; set; } = null!;
+
+    [Required]
+    [Column("user_id")]
+    public int UserId { get; set; }
+
+    public User User { get; set; } = null!;
 }

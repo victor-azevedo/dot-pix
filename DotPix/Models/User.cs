@@ -24,4 +24,6 @@ public class User(string name, string cpf)
 
     [Column("updated_at")]
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+    public ICollection<PaymentProviderAccount> PaymentProviderAccount { get; } = new List<PaymentProviderAccount>();
 }

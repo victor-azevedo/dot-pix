@@ -22,4 +22,6 @@ public class PaymentProvider(string name)
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
     public PaymentProviderToken? Token { get; set; }
+
+    public ICollection<PaymentProviderAccount> PaymentProviderAccount { get; } = new List<PaymentProviderAccount>();
 }
