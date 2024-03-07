@@ -36,4 +36,6 @@ public class PaymentProviderAccount(string account, string agency)
     public int UserId { get; set; }
 
     public User User { get; set; } = null!;
+
+    public ICollection<PixKey> PixKey { get; } = new List<PixKey>();
 }

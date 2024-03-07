@@ -9,4 +9,5 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<PaymentProvider> PaymentProvider { get; set; }
     public DbSet<PaymentProviderToken> PaymentProviderToken { get; set; }
     public DbSet<PaymentProviderAccount> PaymentProviderAccount { get; set; }
+    public DbSet<PixKey> PixKeys { get; set; }
 }
