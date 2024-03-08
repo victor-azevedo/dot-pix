@@ -40,4 +40,6 @@ app.UseHttpsRedirection();
 
 app.MapControllers();
 
+app.Seed();
+
 app.Run();

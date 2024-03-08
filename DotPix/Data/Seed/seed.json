@@ -1,0 +1,72 @@
+[
+  {
+    "User": {
+      "Name": "Joao da Silva",
+      "Cpf": "12345678901"
+    },
+    "PaymentProvider": {
+      "Name": "Stone",
+      "Token": "AbCdEfGhIjKlMnOpQrStUvWxYz0123456789"
+    },
+    "PaymentProviderAccount": {
+      "Account": "987654",
+      "Agency": "0002"
+    }
+  },
+  {
+    "User": {
+      "Name": "Maria Oliveira",
+      "Cpf": "98765432109"
+    },
+    "PaymentProvider": {
+      "Name": "Stone",
+      "Token": "AbCdEfGhIjKlMnOpQrStUvWxYz0123456789"
+    },
+    "PaymentProviderAccount": {
+      "Account": "123456",
+      "Agency": "0003"
+    }
+  },
+  {
+    "User": {
+      "Name": "Carlos Souza",
+      "Cpf": "45678901234"
+    },
+    "PaymentProvider": {
+      "Name": "PayPal",
+      "Token": "LmNoPqRsTuVwXzAaBbCcDdEeFfGgHhIiJjKk0123456789"
+    },
+    "PaymentProviderAccount": {
+      "Account": "789012",
+      "Agency": "0004"
+    }
+  },
+  {
+    "User": {
+      "Name": "Ana Santos",
+      "Cpf": "34567890123"
+    },
+    "PaymentProvider": {
+      "Name": "PayPal",
+      "Token": "LmNoPqRsTuVwXzAaBbCcDdEeFfGgHhIiJjKk0123456789"
+    },
+    "PaymentProviderAccount": {
+      "Account": "456789",
+      "Agency": "0005"
+    }
+  },
+  {
+    "User": {
+      "Name": "Felipe Lima",
+      "Cpf": "56789012345"
+    },
+    "PaymentProvider": {
+      "Name": "Stone",
+      "Token": "AbCdEfGhIjKlMnOpQrStUvWxYz0123456789"
+    },
+    "PaymentProviderAccount": {
+      "Account": "234567",
+      "Agency": "0006"
+    }
+  }
+]
