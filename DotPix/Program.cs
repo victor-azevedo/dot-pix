@@ -1,4 +1,6 @@
 using DotPix.Data;
+using DotPix.Middlewares;
+using DotPix.Repositories;
 using DotPix.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,6 +39,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<ExceptionHandleMiddleware>();
 
 app.MapControllers();
 
