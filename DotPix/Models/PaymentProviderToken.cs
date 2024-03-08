@@ -1,9 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace DotPix.Models;
 
 [Table("payment_provider_tokens")]
+[Index(nameof(Token), IsUnique = true)]
 public class PaymentProviderToken(string token)
 {
     [Key]

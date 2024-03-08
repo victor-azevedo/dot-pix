@@ -23,6 +23,7 @@ builder.Services.AddDbContext<AppDbContext>(opts =>
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<HealthService>();
+builder.Services.AddScoped<PaymentProviderTokenRepository>();
 
 builder.Services.AddEndpointsApiExplorer();
 
@@ -41,6 +42,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseMiddleware<ExceptionHandleMiddleware>();
+app.UseMiddleware<AuthenticationMiddleware>();
 
 app.MapControllers();
 
