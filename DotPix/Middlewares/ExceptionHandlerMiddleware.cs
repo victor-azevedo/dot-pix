@@ -29,6 +29,7 @@ public class ExceptionHandleMiddleware(RequestDelegate next)
         ExceptionResponse response = exception switch
         {
             AuthenticationException => new ExceptionResponse(HttpStatusCode.Unauthorized, exception.Message),
+            CpfNotFoundException => new ExceptionResponse(HttpStatusCode.NotFound, exception.Message),
             _ => new ExceptionResponse(HttpStatusCode.InternalServerError, "Internal server error. Please retry later")
         };
 
