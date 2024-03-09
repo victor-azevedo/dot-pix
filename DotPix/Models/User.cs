@@ -1,9 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace DotPix.Models;
 
 [Table("users")]
+[Index(nameof(Cpf), IsUnique = true)]
 public class User(string name, string cpf)
 {
     [Key]
