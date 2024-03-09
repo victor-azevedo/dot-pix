@@ -6,11 +6,9 @@ namespace DotPix.Repositories;
 
 public class PaymentProviderTokenRepository(AppDbContext context)
 {
-    private readonly AppDbContext _context = context;
-
-    public async Task<PaymentProviderToken?> FindPaymentProviderByToken(string token)
+    public async Task<PaymentProviderToken?> FindByToken(string token)
     {
-        var paymentProviderToken = await _context.PaymentProviderToken.SingleOrDefaultAsync(p => p.Token == token);
+        var paymentProviderToken = await context.PaymentProviderToken.SingleOrDefaultAsync(p => p.Token == token);
 
         return paymentProviderToken;
     }
