@@ -3,14 +3,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DotPix.Models;
 
-public enum PixKeyTypes
-{
-    CPF,
-    Email,
-    Phone,
-    Random
-}
-
 [Table("pix_keys")]
 public class PixKey(PixKeyTypes type, string value)
 {
