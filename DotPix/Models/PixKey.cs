@@ -29,5 +29,5 @@ public class PixKey(PixKeyTypes type, string value)
     [Column("payment_provider_account_id")]
     public int PaymentProviderAccountId { get; set; }
 
-    public PaymentProviderAccount PaymentProviderAccount { get; set; } = null!;
+    public PaymentProviderAccount PaymentProviderAccount { get; set; }
 }

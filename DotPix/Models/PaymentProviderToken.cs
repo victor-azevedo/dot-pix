@@ -27,5 +27,5 @@ public class PaymentProviderToken(string token)
     [Column("payment_provider_id")]
     public int PaymentProviderId { get; set; }
 
-    public PaymentProvider PaymentProvider { get; set; } = null!;
+    public PaymentProvider PaymentProvider { get; set; }
 }

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace DotPix.Models;
 
 [Table("payment_provider_accounts")]
-public class PaymentProviderAccount(string account, string agency, PaymentProvider paymentProvider, User user)
+public class PaymentProviderAccount(string account, string agency)
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -29,13 +29,13 @@ public class PaymentProviderAccount(string account, string agency, PaymentProvid
     [Column("payment_provider_id")]
     public int PaymentProviderId { get; set; }
 
-    public PaymentProvider PaymentProvider { get; set; } = paymentProvider;
+    public PaymentProvider PaymentProvider { get; set; }
 
     [Required]
     [Column("user_id")]
     public int UserId { get; set; }
 
-    public User User { get; set; } = user;
+    public User User { get; set; }
 
     public ICollection<PixKey> PixKey { get; } = new List<PixKey>();
 }
