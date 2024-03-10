@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DotPix.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240307024039_AddPixKeyEntity")]
-    partial class AddPixKeyEntity
+    [Migration("20240310000607_AddInitialModels")]
+    partial class AddInitialModels
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -127,6 +127,9 @@ namespace DotPix.Migrations
                     b.HasIndex("PaymentProviderId")
                         .IsUnique();
 
+                    b.HasIndex("Token")
+                        .IsUnique();
+
                     b.ToTable("payment_provider_tokens");
                 });
 
@@ -196,6 +199,9 @@ namespace DotPix.Migrations
                         .HasColumnName("updated_at");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Cpf")
+                        .IsUnique();
 
                     b.ToTable("users");
                 });
