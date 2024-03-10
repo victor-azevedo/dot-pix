@@ -1,9 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace DotPix.Models;
 
 [Table("pix_keys")]
+[Index(nameof(Value), IsUnique = true)]
 public class PixKey(PixKeyTypes type, string value)
 {
     [Key]
