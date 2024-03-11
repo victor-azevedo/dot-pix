@@ -91,4 +91,15 @@ public class PixKeyService(
         return Int32.Parse(httpContextAccessor.HttpContext!.Items["PaymentProviderId"]?.ToString() ??
                            throw new InvalidOperationException());
     }
+
+    public async Task<OutgoingGetPixKeyDto> FindKeyByTypeAndValue(string typeStr, string value)
+    {
+        var pixKeyType = PixKey.ParsePixKeyType(typeStr);
+
+        var key = await pixKeyRepository.FindByTypeAndValue(pixKeyType, value);
+
+        var response = new OutgoingGetPixKeyDto(key);
+
+        return response;
+    }
 }

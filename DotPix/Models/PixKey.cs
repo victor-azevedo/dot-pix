@@ -1,8 +1,17 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using DotPix.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace DotPix.Models;
+
+public enum PixKeyTypes
+{
+    CPF,
+    Email,
+    Phone,
+    Random
+}
 
 [Table("pix_keys")]
 [Index(nameof(Value), IsUnique = true)]
@@ -32,4 +41,17 @@ public class PixKey(PixKeyTypes type, string value)
     public int PaymentProviderAccountId { get; set; }
 
     public PaymentProviderAccount PaymentProviderAccount { get; set; }
+
+    public static PixKeyTypes ParsePixKeyType(string pixKeyTypeStr)
+    {
+        try
+        {
+            var pixKeyType = (PixKeyTypes)Enum.Parse(typeof(PixKeyTypes), pixKeyTypeStr, ignoreCase: true);
+            return pixKeyType;
+        }
+        catch (Exception)
+        {
+            throw new InvalidPixKeyTypeException();
+        }
+    }
 }

@@ -44,15 +44,9 @@ public class CreatePixKeyDto : IValidatableObject
         }
     }
 
-    public PixKeyTypes ParsePixKeyType()
-    {
-        Enum.TryParse(Type, ignoreCase: true, out PixKeyTypes pixKeyType);
-        return pixKeyType;
-    }
-
     public PixKey ToEntity(PaymentProviderAccount paymentProviderAccount)
     {
-        return new PixKey(value: Value, type: ParsePixKeyType())
+        return new PixKey(value: Value, type: PixKey.ParsePixKeyType(Type))
         {
             PaymentProviderAccount = paymentProviderAccount
         };
