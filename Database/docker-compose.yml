@@ -1,13 +1,13 @@
 services:
-  db:
+  postgres:
     image: postgres
     restart: always
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - dotpix-pgdata:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: dot_pix
+      POSTGRES_DB: dotpix_dev
     ports:
       - 5432:5432
     healthcheck:
@@ -15,5 +15,13 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    networks:
+      - dotpix-db
+
 volumes:
-  pgdata:
+  dotpix-pgdata:
+
+networks:
+  dotpix-db:
+    driver: bridge
+    name: dotpix-db

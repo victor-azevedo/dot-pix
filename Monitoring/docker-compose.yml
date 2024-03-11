@@ -26,6 +26,26 @@ services:
       - 3000:3000
     volumes:
       - grafana:/var/lib/grafana
+  
+  postgres-exporter:
+    image: quay.io/prometheuscommunity/postgres-exporter:latest
+    container_name: postgres-exporter
+    ports:
+      - 9187:9187
+    environment:
+      - DATA_SOURCE_URI=postgres/postgres?sslmode=disable
+      - DATA_SOURCE_USER=postgres
+      - DATA_SOURCE_PASS=postgres
+    networks:
+      - default
+      - dotpix-db
+    external_links:
+      - dotpix-db
 
 volumes:
   grafana:
+
+networks:
+  dotpix-db:
+    external: true
+    name: dotpix-db
