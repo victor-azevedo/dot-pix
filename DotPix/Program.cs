@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using DotPix.Data;
 using DotPix.Middlewares;
 using DotPix.Repositories;
@@ -19,16 +20,32 @@ builder.Services.AddDbContext<AppDbContext>(opts =>
     opts.UseNpgsql(connectionString);
 });
 
+
 // Add services to the container.
 builder.Services.AddControllers();
 
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddScoped<HealthService>();
+
 builder.Services.AddScoped<PaymentProviderTokenRepository>();
+
+builder.Services.AddScoped<PixKeyService>();
+builder.Services.AddScoped<PixKeyRepository>();
+
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<UserRepository>();
+
+builder.Services.AddScoped<PaymentProviderAccountRepository>();
 
 builder.Services.AddEndpointsApiExplorer();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddSwaggerGen();
+
+// Avoid Circular Reference in JSON
+builder.Services.AddControllersWithViews()
+    .AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
 
 var app = builder.Build();
 
