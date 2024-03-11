@@ -4,6 +4,9 @@ namespace DotPix.Data;
 
 public static class AppDbInitializer
 {
+    private const string SeedDevJsonPath = "./Data/Seed/seedDev.json";
+    private const string SeedTestJsonPath = "./Data/Seed/seedTest.json";
+
     public static WebApplication Seed(this WebApplication app)
     {
         try
@@ -13,12 +16,17 @@ public static class AppDbInitializer
 
             context.Database.EnsureCreated();
 
-            var seedHandler = new SeedHandler(context);
+            var seedJsonPath = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Test"
+                ? SeedTestJsonPath
+                : SeedDevJsonPath;
+
+            var seedHandler = new SeedHandler(context, seedJsonPath);
             seedHandler.EnsureDatabaseIsPopulated();
 
             return app;
         }
-        catch (Exception e)
+        catch
+            (Exception e)
         {
             Console.WriteLine($"Error during seeding: {e}");
             throw new Exception(message: "Seed Error! See log for details.");

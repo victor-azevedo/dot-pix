@@ -71,6 +71,7 @@ app.MapControllers();
 
 app.MapMetrics();
 
-app.Seed();
+if (!app.Environment.IsProduction())
+    app.Seed();
 
 app.Run();
