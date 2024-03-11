@@ -4,6 +4,7 @@ using DotPix.Middlewares;
 using DotPix.Repositories;
 using DotPix.Services;
 using Microsoft.EntityFrameworkCore;
+using Prometheus;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,12 +57,19 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// Configure Metrics
+app.UseMetricServer();
+app.UseHttpMetrics(options => { options.AddCustomLabel("host", context => context.Request.Host.Host); });
+
+
 app.UseHttpsRedirection();
 
 app.UseMiddleware<ExceptionHandleMiddleware>();
 app.UseMiddleware<AuthenticationMiddleware>();
 
 app.MapControllers();
+
+app.MapMetrics();
 
 app.Seed();
 
