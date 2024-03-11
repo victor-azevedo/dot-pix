@@ -43,4 +43,18 @@ public class CreatePixKeyDto : IValidatableObject
                 $"Invalid value for Random type. 'Value' must be a valid UUID.");
         }
     }
+
+    public PixKeyTypes ParsePixKeyType()
+    {
+        Enum.TryParse(Type, ignoreCase: true, out PixKeyTypes pixKeyType);
+        return pixKeyType;
+    }
+
+    public PixKey ToEntity(PaymentProviderAccount paymentProviderAccount)
+    {
+        return new PixKey(value: Value, type: ParsePixKeyType())
+        {
+            PaymentProviderAccount = paymentProviderAccount
+        };
+    }
 }
