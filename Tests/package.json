@@ -8,7 +8,7 @@
     "accounts-generator": "node ./Generators/accountsGenerator.js",
     "keys-generator": "node ./Generators/keysGenerator.js",
     "health-test": "k6 run ./.k6/healthTest.js  --out json=./.k6/reports/healthTestReport.json",
-    "postKeys-test": "npm run accounts-generator && npm run keys-generator && k6 run ./.k6/postKeysTest.js  --out json=postKeysTestReport.json"
+    "postKeys-test": "npm run accounts-generator && npm run keys-generator && k6 run ./.k6/postKeysTest.js  --out json=./.k6/reports/postKeysTestReport.json"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
