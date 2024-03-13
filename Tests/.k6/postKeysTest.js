@@ -1,5 +1,12 @@
 import http from "k6/http";
-import {API_URL, defaultOptions, usersSeed, getRandomToken, parseJsonToArray} from "./helpers.js";
+import {
+    API_URL,
+    defaultOptions,
+    usersSeed,
+    getRandomToken,
+    getRandomElement,
+    parseJsonToArray
+} from "./helpers.js";
 
 const ACCOUNTS_FILE_PATH = "../Mocks/accounts.json";
 const KEYS_FILE_PATH = "../Mocks/keys.json";
@@ -16,30 +23,25 @@ export default function () {
         },
     };
 
-    const payload = JSON.stringify(getPayload());
+    const payload = JSON.stringify(getRandomElement(payloads));
 
-    http.post(url, payload, params);
+    const resp = http.post(url, payload, params);
 }
 
-
-function getPayload() {
-    return payloads.pop();
-}
 
 function generatePayloads() {
     console.log("Creating payloads...")
-    const accounts = [...parseJsonToArray("accounts", ACCOUNTS_FILE_PATH)];
-    const keys = [...parseJsonToArray("keys", KEYS_FILE_PATH)];
-    const users = [...usersSeed];
+    const accounts = parseJsonToArray("accounts", ACCOUNTS_FILE_PATH);
+    const keys = parseJsonToArray("keys", KEYS_FILE_PATH);
 
-    if (accounts.length < PAYLOAD_LENGTH || keys.length < PAYLOAD_LENGTH || users.length < PAYLOAD_LENGTH)
+    if (accounts.length < PAYLOAD_LENGTH || keys.length < PAYLOAD_LENGTH || usersSeed.length < PAYLOAD_LENGTH)
         throw new Error('Small mock`s files');
 
     const payloads = []
     for (let i = 0; i < PAYLOAD_LENGTH; i++) {
-        const key = keys.pop();
-        const account = accounts.pop();
-        const user = users.pop();
+        const key = getRandomElement(keys);
+        const account = getRandomElement(accounts);
+        const user = getRandomElement(usersSeed);
         payloads.push({
                 "key":
                     {
