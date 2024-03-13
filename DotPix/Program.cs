@@ -39,11 +39,11 @@ builder.Services.AddScoped<PixKeyRepository>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<UserRepository>();
 
-// builder.Services.AddScoped<PaymentProviderAccountService>();
+builder.Services.AddScoped<PaymentProviderAccountService>();
 builder.Services.AddScoped<PaymentProviderAccountRepository>();
 
-// builder.Services.AddScoped<PaymentService>();
-// builder.Services.AddScoped<PaymentRepository>();
+builder.Services.AddScoped<PaymentService>();
+builder.Services.AddScoped<PaymentRepository>();
 
 builder.Services.AddEndpointsApiExplorer();
 

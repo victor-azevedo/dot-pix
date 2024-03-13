@@ -7,9 +7,9 @@ namespace DotPix.Services;
 
 public class PixKeyService(
     UserService userService,
+    HttpContextService httpContextService,
     PaymentProviderAccountRepository paymentProviderAccountRepository,
-    PixKeyRepository pixKeyRepository,
-    IHttpContextAccessor httpContextAccessor)
+    PixKeyRepository pixKeyRepository)
 {
     private const int MaxUserPixKeyAllowed = 20;
     private const int MaxUserPixKeyPerPspAllowed = 5;
@@ -28,7 +28,7 @@ public class PixKeyService(
 
         ValidateMaximumUserPixKey(allUserPixKeys);
 
-        var paymentProviderId = GetPaymentProviderIdFromHttpContext();
+        var paymentProviderId = httpContextService.GetPaymentProviderIdFromHttpContext();
         ValidateMaximumUserPixKeyByPsp(allUserAccounts, paymentProviderId);
 
         ValidatePixKeyIsUnique();
@@ -86,20 +86,26 @@ public class PixKeyService(
         // Validates uniqueness in the database using the UNIQUE constraint on the @value column in the @pix-key table.
     }
 
-    private int GetPaymentProviderIdFromHttpContext()
+    public async Task<OutgoingGetPixKeyDto> FindKeyByTypeAndValue(string typeStr, string value)
     {
-        return Int32.Parse(httpContextAccessor.HttpContext!.Items["PaymentProviderId"]?.ToString() ??
-                           throw new InvalidOperationException());
+        var pixKeyType = PixKey.ParsePixKeyType(typeStr);
+
+        var key = await pixKeyRepository.FindByTypeAndValueIncludeAccount(pixKeyType, value);
+
+        var response = new OutgoingGetPixKeyDto(key);
+
+        return response;
     }
 
-    public async Task<OutgoingGetPixKeyDto> FindKeyByTypeAndValue(string typeStr, string value)
+    public async Task<PixKey> FindByTypeAndValueOrError(string typeStr, string value)
     {
         var pixKeyType = PixKey.ParsePixKeyType(typeStr);
 
         var key = await pixKeyRepository.FindByTypeAndValue(pixKeyType, value);
 
-        var response = new OutgoingGetPixKeyDto(key);
+        if (key == null)
+            throw new PixKeyNotFoundException();
 
-        return response;
+        return key;
     }
 }

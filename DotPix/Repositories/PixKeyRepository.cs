@@ -22,7 +22,7 @@ public class PixKeyRepository(AppDbContext context)
         }
     }
 
-    public async Task<PixKey> FindByTypeAndValue(PixKeyTypes pixKeyType, string value)
+    public async Task<PixKey> FindByTypeAndValueIncludeAccount(PixKeyTypes pixKeyType, string value)
     {
         var key = await context.PixKeys
             .Include(pk => pk.PaymentProviderAccount)
@@ -35,6 +35,13 @@ public class PixKeyRepository(AppDbContext context)
         if (key == null)
             throw new PixKeyNotFoundException();
 
+        return key;
+    }
+
+    public async Task<PixKey?> FindByTypeAndValue(PixKeyTypes pixKeyType, string value)
+    {
+        var key = await context.PixKeys.FirstOrDefaultAsync(
+            pk => pk.Type == pixKeyType && pk.Value == value);
         return key;
     }
 }
