@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DotPix.Models.Dtos;
 
-public class CreatePixKeyAccountDto
+public class PostAccountDto
 {
     [Required(ErrorMessage = "Field 'number' is required")]
     [StringLength(20, ErrorMessage = "Maximum length 20 characters")]

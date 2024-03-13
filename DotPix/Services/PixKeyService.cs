@@ -42,7 +42,7 @@ public class PixKeyService(
         await pixKeyRepository.Create(userPixKey);
     }
 
-    private PaymentProviderAccount? GetUserAccountInThisPaymentProvider(CreatePixKeyAccountDto incomingAccount,
+    private PaymentProviderAccount? GetUserAccountInThisPaymentProvider(PostAccountDto incomingAccount,
         List<PaymentProviderAccount> allUserAccounts, int paymentProviderId)
     {
         return allUserAccounts.Find(ac =>
@@ -51,7 +51,7 @@ public class PixKeyService(
             ac.PaymentProviderId == paymentProviderId);
     }
 
-    private PaymentProviderAccount NewAccountInThisPaymentProvider(CreatePixKeyAccountDto incomingAccount, User user,
+    private PaymentProviderAccount NewAccountInThisPaymentProvider(PostAccountDto incomingAccount, User user,
         int paymentProviderId)
     {
         return incomingAccount.ToEntity(user, paymentProviderId);
