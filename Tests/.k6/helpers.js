@@ -26,6 +26,9 @@ export function parseJsonToArray(dataName, filepath) {
 }
 
 export function getRandomToken() {
-    const paymentProviders = paymentProvidersSeed
-    return paymentProviders[Math.floor((Math.random() * paymentProviders.length))]["Token"]
+    return getRandomElement(paymentProvidersSeed)["Token"]
+}
+
+export function getRandomElement(array) {
+    return array[Math.floor((Math.random() * array.length))]
 }
