@@ -1,8 +1,8 @@
 import {faker} from "@faker-js/faker";
-import {saveDataToJson} from "./utils.js";
+import {saveDataToJson, SEED_LENGTH} from "../utils.js";
 
-const ACCOUNTS_LENGTH = 10_000;
-const ACCOUNTS_FILE_PATH = "../Mocks/accounts.json";
+const accountsLength = SEED_LENGTH;
+const ACCOUNTS_FILE_PATH = "./Mocks/accounts.json";
 
 function createRandomAccounts() {
     function createAccount() {
@@ -12,7 +12,7 @@ function createRandomAccounts() {
     }
 
     const accounts = []
-    for (let i = 0; i < ACCOUNTS_LENGTH; i++) {
+    for (let i = 0; i < accountsLength; i++) {
         accounts.push(createAccount());
     }
     return accounts;

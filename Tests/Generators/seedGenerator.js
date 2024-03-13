@@ -1,11 +1,11 @@
 import {faker} from "@faker-js/faker";
 import {UniqueEnforcer} from "enforce-unique";
-import {saveDataToJson} from "./utils.js"
+import {saveDataToJson, SEED_LENGTH} from "../utils.js"
 
-const USERS_LENGTH = 10_000;
-const PAYMENT_PROVIDES_LENGTH = 10_000;
+const usersLength = SEED_LENGTH;
+const paymentProvidersLength = SEED_LENGTH;
 
-export const SEED_TEST_FILE_PATH = "../../Database/seedTest.json"
+export const SEED_TEST_FILE_PATH = "../Database/seedTest.json"
 
 function createRandomUsers() {
     const uniqueEnforcerCpf = new UniqueEnforcer();
@@ -22,7 +22,7 @@ function createRandomUsers() {
     }
 
     const users = []
-    for (let i = 0; i < USERS_LENGTH; i++) {
+    for (let i = 0; i < usersLength; i++) {
         users.push(createUser());
     }
     return users;
@@ -43,7 +43,7 @@ function createRandomPaymentProviders() {
     }
 
     const paymentProviders = []
-    for (let i = 0; i < PAYMENT_PROVIDES_LENGTH; i++) {
+    for (let i = 0; i < paymentProvidersLength; i++) {
         paymentProviders.push(createPaymentProvider());
     }
 

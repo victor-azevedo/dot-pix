@@ -1,5 +1,7 @@
 import fs from "fs";
 
+export const SEED_LENGTH = 500_000;
+
 export function saveDataToJson(data, filepath) {
     fs.writeFile(filepath, JSON.stringify(data), "utf-8",
         (err) => {

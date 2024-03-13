@@ -1,9 +1,9 @@
 import {faker} from "@faker-js/faker";
-import {saveDataToJson} from "./utils.js";
+import {saveDataToJson, SEED_LENGTH} from "../utils.js";
 import {UniqueEnforcer} from "enforce-unique";
 
-const KEYS_LENGTH = 10_000;
-const KEYS_FILE_PATH = "../Mocks/keys.json";
+const keysLength = SEED_LENGTH;
+const KEYS_FILE_PATH = "./Mocks/keys.json";
 
 function createRandomKeys() {
     const uniqueEnforcerUudi = new UniqueEnforcer();
@@ -17,7 +17,7 @@ function createRandomKeys() {
     }
 
     const keys = []
-    for (let i = 0; i < KEYS_LENGTH; i++) {
+    for (let i = 0; i < keysLength; i++) {
         keys.push(createKey());
     }
     return keys;
@@ -25,12 +25,12 @@ function createRandomKeys() {
 
 function init() {
     try {
-        console.log("Creating accounts...");
+        console.log("Creating keys...");
 
         saveDataToJson(createRandomKeys(), KEYS_FILE_PATH);
     } catch
         (error) {
-        console.error(`Error creating accounts: ${error}`);
+        console.error(`Error creating keys: ${error}`);
     }
 }
 
