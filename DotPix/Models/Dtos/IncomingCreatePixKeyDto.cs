@@ -4,7 +4,7 @@ namespace DotPix.Models.Dtos;
 
 public class IncomingCreatePixKeyDto : IValidatableObject
 {
-    public CreatePixKeyDto Key { get; set; }
+    public PostPixKeyDto Key { get; set; }
     public CreatePixKeyUserDto User { get; set; }
     public CreatePixKeyAccountDto Account { get; set; }
 
