@@ -1,8 +1,8 @@
 import {SharedArray} from "k6/data";
 
 export const SEED_TEST_FILE_PATH = "../../Database/seedTest.json"
-
 export const API_URL = "http://localhost:5200";
+export const PAYLOAD_LENGTH = 100000;
 
 export const defaultOptions = {
     vus: 10,
@@ -23,6 +23,10 @@ export function parseJsonToArray(dataName, filepath) {
     return new SharedArray(dataName, function () {
         return JSON.parse(open(filepath));
     });
+}
+
+export function getSomeToken() {
+    return paymentProvidersSeed[0]["Token"]
 }
 
 export function getRandomToken() {

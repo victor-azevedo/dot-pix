@@ -1,6 +1,7 @@
 import http from "k6/http";
 import {
     API_URL,
+    PAYLOAD_LENGTH,
     defaultOptions,
     usersSeed,
     getRandomToken,
@@ -10,7 +11,6 @@ import {
 
 const ACCOUNTS_FILE_PATH = "../Mocks/accounts.json";
 const KEYS_FILE_PATH = "../Mocks/keys.json";
-const PAYLOAD_LENGTH = 10000;
 
 const payloads = generatePayloads();
 export const options = defaultOptions;
@@ -25,7 +25,7 @@ export default function () {
 
     const payload = JSON.stringify(getRandomElement(payloads));
 
-    const resp = http.post(url, payload, params);
+    http.post(url, payload, params);
 }
 
 
