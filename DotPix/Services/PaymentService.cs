@@ -1,3 +1,4 @@
+using DotPix.Exceptions;
 using DotPix.Models;
 using DotPix.Models.Dtos;
 using DotPix.Repositories;
@@ -25,9 +26,14 @@ public class PaymentService(
         var keyValueBody = incomingCreatePaymentDto.Destiny.Key.Value;
         var pixKeyDestiny = await pixKeyService.FindByTypeAndValueOrError(keyTypeBody, keyValueBody);
 
+        if (pixKeyDestiny.PaymentProviderAccountId == accountOrigin.Id)
+            throw new ConflictException("Destiny account must be different origin account");
+
+        // Avoid same payment in 30s
+
         var amount = incomingCreatePaymentDto.Amount;
         var description = incomingCreatePaymentDto.Description;
-        var payment = new Payments(uudi: Guid.NewGuid(), amount: amount, description: description)
+        var payment = new Payments(amount: amount, description: description)
         {
             AccountOrigin = accountOrigin,
             PixKeyDestiny = pixKeyDestiny
@@ -37,6 +43,6 @@ public class PaymentService(
 
         return payment;
 
-        // Send request
+        // Send payment to PSP destiny
     }
 }

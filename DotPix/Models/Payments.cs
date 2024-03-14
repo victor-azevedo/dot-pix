@@ -11,11 +11,12 @@ public enum PaymentStatus
 }
 
 [Table("payments")]
-public class Payments(Guid uudi, int amount, string? description)
+public class Payments(int amount, string? description)
 {
     [Key]
     [Column("id")]
-    public Guid Id { get; set; } = uudi;
+    public Guid Id { get; set; } = new();
+
 
     [Required]
     [Column("amount")]
