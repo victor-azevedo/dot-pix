@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotPixApi", "DotPixApi\DotPixApi.csproj", "{4E25B978-DE79-43C2-ADED-B5B37B3E3005}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotPixWorker", "DotPixWorker\DotPixWorker.csproj", "{3696711E-B0F7-4842-A0CF-8D85BE8919A9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{4E25B978-DE79-43C2-ADED-B5B37B3E3005}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E25B978-DE79-43C2-ADED-B5B37B3E3005}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E25B978-DE79-43C2-ADED-B5B37B3E3005}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3696711E-B0F7-4842-A0CF-8D85BE8919A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3696711E-B0F7-4842-A0CF-8D85BE8919A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3696711E-B0F7-4842-A0CF-8D85BE8919A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3696711E-B0F7-4842-A0CF-8D85BE8919A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
