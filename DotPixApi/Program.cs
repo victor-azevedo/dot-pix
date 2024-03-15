@@ -45,6 +45,8 @@ builder.Services.AddScoped<PaymentProviderAccountRepository>();
 builder.Services.AddScoped<PaymentService>();
 builder.Services.AddScoped<PaymentRepository>();
 
+builder.Services.AddScoped<PublisherPaymentQueue>();
+
 builder.Services.AddEndpointsApiExplorer();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

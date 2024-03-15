@@ -18,7 +18,7 @@ public class PaymentProviderAccountRepository(AppDbContext context)
     }
 
     public async Task<PaymentProviderAccount?> FindByUserAndAccount(
-        User user, int paymentProviderId, PostAccountDto account)
+        User user, int paymentProviderId, InAccountDto account)
     {
         var userAccount = await context.PaymentProviderAccount.FirstOrDefaultAsync(acc =>
             acc.UserId == user.Id &&

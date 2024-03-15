@@ -27,5 +27,11 @@
     <ItemGroup>
         <Folder Include="Migrations\" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="RabbitMQ.Client">
+        <HintPath>..\..\..\.nuget\packages\rabbitmq.client\6.8.1\lib\netstandard2.0\RabbitMQ.Client.dll</HintPath>
+      </Reference>
+    </ItemGroup>
     
 </Project>

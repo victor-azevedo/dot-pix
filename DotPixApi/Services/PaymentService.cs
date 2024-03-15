@@ -10,20 +10,21 @@ public class PaymentService(
     PaymentProviderAccountService paymentProviderAccountService,
     PixKeyService pixKeyService,
     HttpContextService httpContextService,
-    PaymentRepository paymentRepository)
+    PaymentRepository paymentRepository,
+    PublisherPaymentQueue publisherPaymentQueue)
 {
-    public async Task<Payments> Create(IncomingCreatePaymentDto incomingCreatePaymentDto)
+    public async Task<OutPostPaymentDto> Create(InPostPaymentDto inPostPaymentDto)
     {
-        var userCpfBody = incomingCreatePaymentDto.Origin.User.Cpf;
+        var userCpfBody = inPostPaymentDto.Origin.User.Cpf;
         var userOrigin = await userService.FindByCpf(userCpfBody);
 
         var paymentProviderId = httpContextService.GetPaymentProviderIdFromHttpContext();
-        var accountBody = incomingCreatePaymentDto.Origin.Account;
+        var accountBody = inPostPaymentDto.Origin.Account;
         var accountOrigin = await paymentProviderAccountService
             .FindByUserAndPspIdAndAccountOrError(userOrigin, paymentProviderId, accountBody);
 
-        var keyTypeBody = incomingCreatePaymentDto.Destiny.Key.Type;
-        var keyValueBody = incomingCreatePaymentDto.Destiny.Key.Value;
+        var keyTypeBody = inPostPaymentDto.Destiny.Key.Type;
+        var keyValueBody = inPostPaymentDto.Destiny.Key.Value;
         var pixKeyDestiny = await pixKeyService.FindByTypeAndValueOrError(keyTypeBody, keyValueBody);
 
         if (pixKeyDestiny.PaymentProviderAccountId == accountOrigin.Id)
@@ -31,8 +32,8 @@ public class PaymentService(
 
         // Avoid same payment in 30s
 
-        var amount = incomingCreatePaymentDto.Amount;
-        var description = incomingCreatePaymentDto.Description;
+        var amount = inPostPaymentDto.Amount;
+        var description = inPostPaymentDto.Description;
         var payment = new Payments(amount: amount, description: description)
         {
             AccountOrigin = accountOrigin,
@@ -41,8 +42,11 @@ public class PaymentService(
 
         await paymentRepository.Create(payment);
 
-        return payment;
+        var paymentResponse = new OutPostPaymentDto(payment);
 
         // Send payment to PSP destiny
+        publisherPaymentQueue.Send(paymentResponse);
+
+        return paymentResponse;
     }
 }

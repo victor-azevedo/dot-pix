@@ -8,7 +8,7 @@ namespace DotPixApi.Services;
 public class PaymentProviderAccountService(PaymentProviderAccountRepository paymentProviderAccountRepository)
 {
     public async Task<PaymentProviderAccount> FindByUserAndPspIdAndAccountOrError(
-        User user, int paymentProviderId, PostAccountDto account)
+        User user, int paymentProviderId, InAccountDto account)
     {
         var userAccount = await paymentProviderAccountRepository
             .FindByUserAndAccount(user, paymentProviderId, account);
