@@ -9,9 +9,9 @@ namespace DotPixApi.Controllers;
 public class PaymentController(PaymentService paymentService) : ControllerBase
 {
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] IncomingCreatePaymentDto incomingCreatePaymentDto)
+    public async Task<IActionResult> Create([FromBody] InPostPaymentDto inPostPaymentDto)
     {
-        var response = await paymentService.Create(incomingCreatePaymentDto);
+        var response = await paymentService.Create(inPostPaymentDto);
 
         return CreatedAtAction(null, null, response);
     }

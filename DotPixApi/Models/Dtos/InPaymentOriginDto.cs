@@ -2,11 +2,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DotPixApi.Models.Dtos;
 
-public class CreatePaymentOriginDto
+public class InPaymentOriginDto
 {
     [Required(ErrorMessage = "Field 'user' is required")]
-    public PostUserDto User { get; set; }
+    public InUserDto User { get; set; }
 
     [Required(ErrorMessage = "Field 'account' is required")]
-    public PostAccountDto Account { get; set; }
+    public InAccountDto Account { get; set; }
 }

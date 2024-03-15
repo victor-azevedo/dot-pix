@@ -2,11 +2,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DotPixApi.Models.Dtos;
 
-public class IncomingCreatePixKeyDto : IValidatableObject
+public class InPostKeysDto : IValidatableObject
 {
-    public PostPixKeyDto Key { get; set; }
-    public PostUserDto User { get; set; }
-    public PostAccountDto Account { get; set; }
+    public InPixKeyDto Key { get; set; }
+    public InUserDto User { get; set; }
+    public InAccountDto Account { get; set; }
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {

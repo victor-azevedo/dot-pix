@@ -14,16 +14,16 @@ public class PixKeyService(
     private const int MaxUserPixKeyAllowed = 20;
     private const int MaxUserPixKeyPerPspAllowed = 5;
 
-    public async Task Create(IncomingCreatePixKeyDto incomingCreatePixKeyDto)
+    public async Task Create(InPostKeysDto inPostKeysDto)
     {
-        var user = await userService.FindByCpf(incomingCreatePixKeyDto.User.Cpf);
+        var user = await userService.FindByCpf(inPostKeysDto.User.Cpf);
 
         var allUserAccounts = await paymentProviderAccountRepository.FindByUser(user);
 
         var allUserPixKeys = new List<PixKey>();
         allUserAccounts.ForEach(account => { allUserPixKeys.AddRange(account.PixKey); });
 
-        if (incomingCreatePixKeyDto.Key.Type == "CPF")
+        if (inPostKeysDto.Key.Type == "CPF")
             ValidateUniquePixKeyTypeCpfPerUser(allUserPixKeys);
 
         ValidateMaximumUserPixKey(allUserPixKeys);
@@ -34,15 +34,15 @@ public class PixKeyService(
         ValidatePixKeyIsUnique();
 
         var userAccount =
-            GetUserAccountInThisPaymentProvider(incomingCreatePixKeyDto.Account, allUserAccounts, paymentProviderId) ??
-            NewAccountInThisPaymentProvider(incomingCreatePixKeyDto.Account, user, paymentProviderId);
+            GetUserAccountInThisPaymentProvider(inPostKeysDto.Account, allUserAccounts, paymentProviderId) ??
+            NewAccountInThisPaymentProvider(inPostKeysDto.Account, user, paymentProviderId);
 
-        var userPixKey = incomingCreatePixKeyDto.Key.ToEntity(userAccount);
+        var userPixKey = inPostKeysDto.Key.ToEntity(userAccount);
 
         await pixKeyRepository.Create(userPixKey);
     }
 
-    private PaymentProviderAccount? GetUserAccountInThisPaymentProvider(PostAccountDto incomingAccount,
+    private PaymentProviderAccount? GetUserAccountInThisPaymentProvider(InAccountDto incomingAccount,
         List<PaymentProviderAccount> allUserAccounts, int paymentProviderId)
     {
         return allUserAccounts.Find(ac =>
@@ -51,7 +51,7 @@ public class PixKeyService(
             ac.PaymentProviderId == paymentProviderId);
     }
 
-    private PaymentProviderAccount NewAccountInThisPaymentProvider(PostAccountDto incomingAccount, User user,
+    private PaymentProviderAccount NewAccountInThisPaymentProvider(InAccountDto incomingAccount, User user,
         int paymentProviderId)
     {
         return incomingAccount.ToEntity(user, paymentProviderId);
@@ -86,13 +86,13 @@ public class PixKeyService(
         // Validates uniqueness in the database using the UNIQUE constraint on the @value column in the @pix-key table.
     }
 
-    public async Task<OutgoingGetPixKeyDto> FindKeyByTypeAndValue(string typeStr, string value)
+    public async Task<OutGetPixKeyDto> FindKeyByTypeAndValue(string typeStr, string value)
     {
         var pixKeyType = PixKey.ParsePixKeyType(typeStr);
 
         var key = await pixKeyRepository.FindByTypeAndValueIncludeAccount(pixKeyType, value);
 
-        var response = new OutgoingGetPixKeyDto(key);
+        var response = new OutGetPixKeyDto(key);
 
         return response;
     }

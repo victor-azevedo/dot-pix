@@ -2,8 +2,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DotPixApi.Models.Dtos;
 
-public class CreatePaymentDestinyDto
+public class InPaymentDestinyDto
 {
     [Required(ErrorMessage = "Field 'key' is required")]
-    public PostPixKeyDto Key { get; set; }
+    public InPixKeyDto Key { get; set; }
 }

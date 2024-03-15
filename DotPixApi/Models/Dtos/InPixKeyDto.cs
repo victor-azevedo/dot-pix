@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace DotPixApi.Models.Dtos;
 
-public class PostPixKeyDto : IValidatableObject
+public class InPixKeyDto : IValidatableObject
 {
     [Required(ErrorMessage = "Field 'value' is required")]
     public string Value { get; set; }

@@ -2,13 +2,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DotPixApi.Models.Dtos;
 
-public class IncomingCreatePaymentDto
+public class InPostPaymentDto
 {
     [Required(ErrorMessage = "Field 'origin' is required")]
-    public CreatePaymentOriginDto Origin { get; set; }
+    public InPaymentOriginDto Origin { get; set; }
 
     [Required(ErrorMessage = "Field 'destiny' is required")]
-    public CreatePaymentDestinyDto Destiny { get; set; }
+    public InPaymentDestinyDto Destiny { get; set; }
 
     [Required(ErrorMessage = "Field 'amount' is required")]
     public int Amount { get; set; }

@@ -9,11 +9,11 @@ namespace DotPixApi.Controllers;
 public class PixKeyController(PixKeyService pixKeyService) : ControllerBase
 {
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] IncomingCreatePixKeyDto incomingCreatePixKeyDto)
+    public async Task<IActionResult> Create([FromBody] InPostKeysDto inPostKeysDto)
     {
-        await pixKeyService.Create(incomingCreatePixKeyDto);
+        await pixKeyService.Create(inPostKeysDto);
 
-        return CreatedAtAction(null, null, incomingCreatePixKeyDto.Key);
+        return CreatedAtAction(null, null, inPostKeysDto.Key);
     }
 
     [HttpGet("{type}/{value}")]

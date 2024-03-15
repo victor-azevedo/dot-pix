@@ -1,6 +1,6 @@
 namespace DotPixApi.Models.Dtos;
 
-public class GetPixKeyUserDto(User user)
+public class OutUserDto(User user)
 {
     public string Name { get; set; } = user.Name;
     public string MaskedCpf { get; set; } = GetMaskedCpf(user.Cpf);
