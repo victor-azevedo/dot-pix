@@ -20,6 +20,7 @@ public class PaymentRepository(AppDbContext context)
             .FirstOrDefaultAsync(p =>
                 p.AccountOriginId == idempotencyKey.AccountOriginId &&
                 p.PixKeyDestinyId == idempotencyKey.PixKeyDestinyId &&
+                p.Amount == idempotencyKey.Amount &&
                 p.CreatedAt >= timeTolerance);
 
         return recentPayment;
