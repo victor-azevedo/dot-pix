@@ -43,11 +43,10 @@ public class PaymentService(
 
         await paymentRepository.Create(payment);
 
+        var paymentToQueue = new OutPaymentQueueDto(payment);
+        publisherPaymentQueue.Send(paymentToQueue);
+
         var paymentResponse = new OutPostPaymentDto(payment);
-
-        // Send payment to PSP destiny
-        publisherPaymentQueue.Send(paymentResponse);
-
         return paymentResponse;
     }
 

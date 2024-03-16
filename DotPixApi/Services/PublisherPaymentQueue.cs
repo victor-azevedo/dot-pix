@@ -7,7 +7,7 @@ namespace DotPixApi.Services;
 
 public class PublisherPaymentQueue(IConfiguration config)
 {
-    public void Send(OutPostPaymentDto payment)
+    public void Send(OutPaymentQueueDto payment)
     {
         var factory = new ConnectionFactory { HostName = config["AppParameters:RabbitMq:HostName"] };
         using var connection = factory.CreateConnection();
