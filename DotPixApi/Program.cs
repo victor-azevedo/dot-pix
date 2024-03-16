@@ -11,14 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Database
 builder.Services.AddDbContext<AppDbContext>(opts =>
 {
-    string host = builder.Configuration["Database:Host"] ?? string.Empty;
-    string port = builder.Configuration["Database:Port"] ?? string.Empty;
-    string username = builder.Configuration["Database:Username"] ?? string.Empty;
-    string database = builder.Configuration["Database:Name"] ?? string.Empty;
-    string password = builder.Configuration["Database:Password"] ?? string.Empty;
-
-    string connectionString = $"Host={host};Port={port};Username={username};Password={password};Database={database}";
-
+    var connectionString = builder.Configuration["Database:ConnectionString"] ?? string.Empty;
     opts.UseNpgsql(connectionString, options => { options.MaxBatchSize(5_000); });
 });
 

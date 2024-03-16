@@ -5,33 +5,35 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <RootNamespace>DotPixApi</RootNamespace>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.2" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.2"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.2">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
-        <PackageReference Include="prometheus-net" Version="8.2.1" />
-        <PackageReference Include="prometheus-net.AspNetCore" Version="8.2.1" />
-        <PackageReference Include="prometheus-net.AspNetCore.HealthChecks" Version="8.2.1" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2"/>
+        <PackageReference Include="prometheus-net" Version="8.2.1"/>
+        <PackageReference Include="prometheus-net.AspNetCore" Version="8.2.1"/>
+        <PackageReference Include="prometheus-net.AspNetCore.HealthChecks" Version="8.2.1"/>
+        <PackageReference Include="RabbitMQ.Client" Version="6.8.1"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove=".gitignore" />
+        <None Remove=".gitignore"/>
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Migrations\" />
+        <Folder Include="Migrations\"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="RabbitMQ.Client">
-        <HintPath>..\..\..\.nuget\packages\rabbitmq.client\6.8.1\lib\netstandard2.0\RabbitMQ.Client.dll</HintPath>
-      </Reference>
+        <Content Include="..\.dockerignore">
+            <Link>.dockerignore</Link>
+        </Content>
     </ItemGroup>
-    
+
 </Project>

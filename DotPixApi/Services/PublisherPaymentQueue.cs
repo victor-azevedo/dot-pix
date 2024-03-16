@@ -5,11 +5,11 @@ using RabbitMQ.Client;
 
 namespace DotPixApi.Services;
 
-public class PublisherPaymentQueue
+public class PublisherPaymentQueue(IConfiguration config)
 {
     public void Send(OutPostPaymentDto payment)
     {
-        var factory = new ConnectionFactory { HostName = "localhost" };
+        var factory = new ConnectionFactory { HostName = config["AppParameters:RabbitMq:HostName"] };
         using var connection = factory.CreateConnection();
         using var channel = connection.CreateModel();
 
