@@ -7,7 +7,7 @@ namespace DotPixWorker.Services;
 
 public class PaymentProviderOriginService(
     IPspApiService pspApiService,
-    IDbContextFactory<WorkerDbContext> dbContextFactory)
+    IDbContextFactory<DotPixDbContext> dbContextFactory)
     : IPaymentProviderOriginService
 {
     public Task HandlePaymentToOrigin(InPaymentOriginDto paymentOrigin)

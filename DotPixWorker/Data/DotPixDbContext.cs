@@ -1,9 +1,11 @@
 ﻿using DotPixWorker.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace DotPixWorker.Data;
 
-public partial class WorkerDbContext(DbContextOptions<WorkerDbContext> options) : DbContext(options)
+public partial class DotPixDbContext(DbContextOptions<DotPixDbContext> options, IOptions<AppParameters> optParams)
+    : DbContext
 {
     public virtual DbSet<Payment> Payments { get; set; }
 
@@ -17,9 +19,17 @@ public partial class WorkerDbContext(DbContextOptions<WorkerDbContext> options) 
 
     public virtual DbSet<User> Users { get; set; }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        => optionsBuilder.UseNpgsql(optParams.Value.Database.ConnectionString);
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Payment>(entity => { entity.Property(e => e.Id).ValueGeneratedNever(); });
+
+        modelBuilder.Entity<PaymentProvider>(entity =>
+        {
+            entity.Property(e => e.ApiUrl).HasDefaultValueSql("''::character varying");
+        });
 
         modelBuilder.Entity<PaymentProviderAccount>(entity =>
         {

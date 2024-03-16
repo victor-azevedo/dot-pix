@@ -2,16 +2,11 @@ using DotPixWorker;
 using DotPixWorker.Data;
 using DotPixWorker.Interfaces;
 using DotPixWorker.Services;
-using Microsoft.EntityFrameworkCore;
 
 var builder = Host.CreateApplicationBuilder(args);
 
 // Database
-builder.Services.AddDbContextFactory<WorkerDbContext>(opts =>
-{
-    var connectionString = builder.Configuration["Database:ConnectionString"];
-    opts.UseNpgsql(connectionString, options => { options.MaxBatchSize(5_000); });
-});
+builder.Services.AddDbContextFactory<DotPixDbContext>();
 
 // Environment variables config
 IConfiguration config = builder.Configuration;
