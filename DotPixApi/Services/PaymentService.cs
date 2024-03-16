@@ -1,6 +1,7 @@
 using DotPixApi.Exceptions;
 using DotPixApi.Models;
 using DotPixApi.Models.Dtos;
+using DotPixApi.Models.IdempotencyKeys;
 using DotPixApi.Repositories;
 
 namespace DotPixApi.Services;
@@ -30,8 +31,6 @@ public class PaymentService(
         if (pixKeyDestiny.PaymentProviderAccountId == accountOrigin.Id)
             throw new ConflictException("Destiny account must be different origin account");
 
-        // Avoid same payment in 30s
-
         var amount = inPostPaymentDto.Amount;
         var description = inPostPaymentDto.Description;
         var payment = new Payments(amount: amount, description: description)
@@ -39,6 +38,8 @@ public class PaymentService(
             AccountOrigin = accountOrigin,
             PixKeyDestiny = pixKeyDestiny
         };
+
+        await ValidatePaymentIsNotRepeated(payment);
 
         await paymentRepository.Create(payment);
 
@@ -48,5 +49,19 @@ public class PaymentService(
         publisherPaymentQueue.Send(paymentResponse);
 
         return paymentResponse;
+    }
+
+    private async Task ValidatePaymentIsNotRepeated(Payments payment)
+    {
+        const int IDEMPOTENCY_PAYMENT_TIME_TOLERANCE = 30;
+
+        var idempotencyKey = new PaymentIdempotencyKey(payment);
+        var timeTolerance = DateTime.UtcNow.AddSeconds(-IDEMPOTENCY_PAYMENT_TIME_TOLERANCE);
+
+        var repeatedPayment = await paymentRepository.FindByIdempotencyKeyAndTimeTolerance(idempotencyKey,
+            timeTolerance);
+        if (repeatedPayment != null)
+            throw new ConflictException(
+                "Unable to proceed with the payment: A similar payment has already been initiated or processed.");
     }
 }
