@@ -4,7 +4,7 @@ namespace DotPixApi.Data;
 
 public static class AppDbInitializer
 {
-    private const string SeedDevJsonPath = "../Database/seedDev.json";
+    private const string SeedDevJsonPath = "./Data/Seed/seedDev.json";
     private const string SeedTestJsonPath = "../Database/seedTest.json";
 
     public static WebApplication Seed(this WebApplication app)

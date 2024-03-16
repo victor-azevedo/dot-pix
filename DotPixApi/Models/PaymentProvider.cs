@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace DotPixApi.Models;
 
 [Table("payment_providers")]
-public class PaymentProvider(string name)
+public class PaymentProvider(string name, string apiUrl)
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -14,6 +14,10 @@ public class PaymentProvider(string name)
     [Required]
     [Column("name", TypeName = "varchar(255)")]
     public string Name { get; set; } = name;
+
+    [Required]
+    [Column("api_url", TypeName = "varchar(255)")]
+    public string ApiUrl { get; set; } = apiUrl;
 
     [Column("created_at")]
     public DateTime CreatedAt { get; init; } = DateTime.UtcNow;

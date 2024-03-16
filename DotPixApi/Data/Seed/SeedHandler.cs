@@ -49,7 +49,7 @@ public class SeedHandler(AppDbContext context, string seedJsonPath)
         ClearPaymentProviderToken();
         seedDataPaymentProviders.ForEach(seedDataPaymentProvider =>
         {
-            var paymentProvider = new PaymentProvider(seedDataPaymentProvider.Name);
+            var paymentProvider = new PaymentProvider(seedDataPaymentProvider.Name, seedDataPaymentProvider.ApiUrl);
             context.PaymentProvider.Add(paymentProvider);
             context.PaymentProviderToken.Add(new PaymentProviderToken(seedDataPaymentProvider.Token)
             {

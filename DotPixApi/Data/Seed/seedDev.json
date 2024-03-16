@@ -24,23 +24,28 @@
   "PaymentProviders": [
     {
       "Name": "Ferrari Finance",
-      "Token": "2bc767d0-437c-4283-9714-c56980b72574"
+      "Token": "2bc767d0-437c-4283-9714-c56980b72574",
+      "ApiUrl": "http://localhost:8081"
     },
     {
       "Name": "McLaren Payment",
-      "Token": "e44eb141-bf62-4cc5-b44b-65a1fec06f4e"
+      "Token": "e44eb141-bf62-4cc5-b44b-65a1fec06f4e",
+      "ApiUrl": "http://localhost:8081"
     },
     {
       "Name": "Red Bull Banking",
-      "Token": "8a3d5f8e-7d4b-4d66-b417-2eab99dfb2c9"
+      "Token": "8a3d5f8e-7d4b-4d66-b417-2eab99dfb2c9",
+      "ApiUrl": "http://localhost:8081"
     },
     {
       "Name": "Williams Finance",
-      "Token": "9f1e805c-6372-40c8-bdd1-2f46046916d5"
+      "Token": "9f1e805c-6372-40c8-bdd1-2f46046916d5",
+      "ApiUrl": "http://localhost:8081"
     },
     {
       "Name": "Mercedes Payments",
-      "Token": "a6f9f432-9e72-4659-b593-4f55b3966507"
+      "Token": "a6f9f432-9e72-4659-b593-4f55b3966507",
+      "ApiUrl": "http://localhost:8081"
     }
   ]
 }
