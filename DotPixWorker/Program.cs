@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 var builder = Host.CreateApplicationBuilder(args);
 
 // Database
-builder.Services.AddDbContext<WorkerDbContext>(opts =>
+builder.Services.AddDbContextFactory<WorkerDbContext>(opts =>
 {
     var connectionString = builder.Configuration["Database:ConnectionString"];
     opts.UseNpgsql(connectionString, options => { options.MaxBatchSize(5_000); });
@@ -20,6 +20,8 @@ builder.Services.Configure<AppParameters>(config.GetSection("AppParameters"));
 // Services
 builder.Services.AddHostedService<Worker>();
 
+builder.Services.AddSingleton<IPaymentProviderDestinyService, PaymentProviderDestinyService>();
+builder.Services.AddSingleton<IPaymentProviderOriginService, PaymentProviderOriginService>();
 builder.Services.AddSingleton<IConsumerPaymentQueue, ConsumerPaymentQueue>();
 builder.Services.AddSingleton<IPspApiService, PspApiService>();
 
