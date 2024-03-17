@@ -23,6 +23,10 @@ public partial class PaymentProvider
     [Column("updated_at")]
     public DateTime UpdatedAt { get; set; }
 
+    [Column("api_url")]
+    [StringLength(255)]
+    public string ApiUrl { get; set; } = null!;
+
     [InverseProperty("PaymentProvider")]
     public virtual ICollection<PaymentProviderAccount> PaymentProviderAccounts { get; set; } = new List<PaymentProviderAccount>();
 

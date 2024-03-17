@@ -1,9 +1,12 @@
+using Microsoft.EntityFrameworkCore.Storage;
+
 namespace DotPixWorker;
 
 public class AppParameters
 {
-    public RabbitMQ RabbitMq { get; set; }
     public Database Database { get; set; }
+    public RabbitMQ RabbitMq { get; set; }
+    public string WorkerName { get; set; }
 }
 
 public class RabbitMQ
@@ -13,5 +16,5 @@ public class RabbitMQ
 
 public class Database
 {
-    public string Dotpix { get; set; }
+    public string ConnectionString { get; set; }
 }

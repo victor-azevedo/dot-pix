@@ -1,17 +1,19 @@
 using System.Text;
+using System.Text.Json;
 using DotPixWorker.Interfaces;
+using DotPixWorker.Models.Dtos;
 
 namespace DotPixWorker.Services;
 
 public class PspApiService(ILogger<PspApiService> logger) : IPspApiService
 {
-    private const int TimeoutForPspRequestInSeconds = 2;
+    private const int TIMEOUT_PSP_REQUESTS_IN_MINUTES = 2;
 
-    public async void GetHealth()
+    public async Task GetHealth(string pspApiBaseUrl)
     {
-        var client = new HttpClient();
+        var client = GetHttpClient();
 
-        var healthUrl = "http://pspapi:8080/health";
+        var healthUrl = $"{pspApiBaseUrl}/health";
         var response = await client.GetAsync(healthUrl);
 
         if (response.IsSuccessStatusCode)
@@ -19,13 +21,15 @@ public class PspApiService(ILogger<PspApiService> logger) : IPspApiService
         else logger.LogError("GET /health FAIL");
     }
 
-    public async Task<bool> PostPaymentPix(string postPaymentPixUrl, string contentStr)
+    public async Task<bool> PostPaymentPix(string pspApiBaseUrl, OutPostDestinyDto paymentDestiny)
     {
         try
         {
             var client = GetHttpClient();
 
-            var content = ParseStringToContent(contentStr);
+            var postPaymentPixUrl = $"{pspApiBaseUrl}/payments/pix";
+
+            var content = ParseObjToContent(paymentDestiny);
             var response = await client.PostAsync(postPaymentPixUrl, content);
 
             return response.IsSuccessStatusCode;
@@ -37,23 +41,26 @@ public class PspApiService(ILogger<PspApiService> logger) : IPspApiService
         }
     }
 
-    public async Task PatchPaymentPix(string patchPaymentPixUrl, string contentStr)
+    public async Task PatchPaymentPix(string pspApiBaseUrl, OutPatchOriginDto paymentStatus)
     {
         var client = GetHttpClient();
 
-        var content = ParseStringToContent(contentStr);
+        var patchPaymentPixUrl = $"{pspApiBaseUrl}/payments/pix";
+
+        var content = ParseObjToContent(paymentStatus);
         await client.PatchAsync(patchPaymentPixUrl, content);
     }
 
-    private static StringContent ParseStringToContent(string contentStr)
+    private static StringContent ParseObjToContent<T>(T contentObj)
     {
+        var contentStr = JsonSerializer.Serialize(contentObj);
         return new StringContent(contentStr, Encoding.UTF8, "application/json");
     }
 
-    private HttpClient GetHttpClient()
+    private static HttpClient GetHttpClient()
     {
         var client = new HttpClient();
-        client.Timeout = TimeSpan.FromSeconds(TimeoutForPspRequestInSeconds);
+        client.Timeout = TimeSpan.FromMinutes(TIMEOUT_PSP_REQUESTS_IN_MINUTES);
         return client;
     }
 }
