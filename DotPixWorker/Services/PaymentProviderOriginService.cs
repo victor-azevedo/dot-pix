@@ -2,17 +2,29 @@ using DotPixWorker.Data;
 using DotPixWorker.Interfaces;
 using DotPixWorker.Models.Dtos;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace DotPixWorker.Services;
 
 public class PaymentProviderOriginService(
     IPspApiService pspApiService,
-    IDbContextFactory<DotPixDbContext> dbContextFactory)
+    IDbContextFactory<DotPixDbContext> dbContextFactory,
+    IHostEnvironment env,
+    IOptions<AppParameters> options)
     : IPaymentProviderOriginService
 {
-    public Task HandlePaymentToOrigin(InPaymentOriginDto paymentOrigin)
+    public async Task HandlePaymentToOrigin(InPaymentQueueDto payment)
     {
-        // TODO: send payment to PSP Origin
-        throw new NotImplementedException();
+        var dbContext = await dbContextFactory.CreateDbContextAsync();
+        var paymentProviderOrigin = await dbContext.PaymentProviders
+            .FirstOrDefaultAsync(provider => provider.Id == payment.Origin.Account.BankId);
+
+        var pspBaseUrl = paymentProviderOrigin!.ApiUrl;
+        if (env.IsDevelopment())
+            pspBaseUrl = options.Value.PspMockUrl;
+
+        var contentToDestiny = new OutPatchOriginDto(payment);
+
+        await pspApiService.PatchPaymentPix(pspBaseUrl, contentToDestiny);
     }
 }
