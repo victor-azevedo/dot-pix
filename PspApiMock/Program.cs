@@ -16,7 +16,12 @@ if (app.Environment.IsDevelopment())
 
 app.MapPost("/payments/pix", (TransferStatus dto) =>
 {
-    Console.WriteLine($"Processing payment from {dto.Origin.User.CPF} to {dto.Destiny.Key.Value}");
+    Console.WriteLine(
+        $"\n***************************" +
+        $"\n--> Processing payment" +
+        $"\n\tID: '{dto.PaymentId}'" +
+        $"\n\t- Origin: CPF '{dto.Origin.User.MaskedCpf}' to:" +
+        $"\n\t- Destiny: Pix key '{dto.Destiny.Key.Type}' - '{dto.Destiny.Key.Value}'");
     var timeToWait = GenerateResponseWaitingTime();
     Console.WriteLine($"This operation will return in {timeToWait} ms");
     Thread.Sleep(timeToWait);
@@ -26,7 +31,10 @@ app.MapPost("/payments/pix", (TransferStatus dto) =>
 
 app.MapPatch("/payments/pix", (TransferStatusDTO dto) =>
 {
-    Console.WriteLine($"Processing payment status id {dto.Id} to {dto.Status}");
+    Console.WriteLine(
+        $"\n***************************" +
+        $"\n--> Payment processed" +
+        $"\n\tID: '{dto.PaymentId}' STATUS: '{dto.Status}'");
     return Results.NoContent();
 });
 
@@ -40,19 +48,19 @@ return;
 
 static int GenerateResponseWaitingTime()
 {
-    const int slowResponsePercentage = 10;
+    const int SLOW_RESPONSE_PERCENTAGE = 30;
 
-    const int slowResponseMinWaitingTimeSec = 3 * 1000;
-    const int slowResponseMaxWaitingTimeSec = 10 * 1000;
+    const int SLOW_RESPONSE_MIN_WAITING_TIME_SEC = 10 * 1000;
+    const int SLOW_RESPONSE_MAX_WAITING_TIME_SEC = 500 * 1000;
 
-    const int normalResponseMinWaitingTimeMilliSec = 3 * 100;
-    const int normalResponseMaxWaitingTimeMilliSec = 5 * 100;
+    const int NORMAL_RESPONSE_MIN_WAITING_TIME_MILLI_SEC = 300;
+    const int NORMAL_RESPONSE_MAX_WAITING_TIME_MILLI_SEC = 500;
 
     var random = new Random();
     var percentageChoice = random.Next(1, 101);
 
-    if (percentageChoice <= slowResponsePercentage)
-        return random.Next(slowResponseMinWaitingTimeSec, slowResponseMaxWaitingTimeSec);
+    if (percentageChoice <= SLOW_RESPONSE_PERCENTAGE)
+        return random.Next(SLOW_RESPONSE_MIN_WAITING_TIME_SEC, SLOW_RESPONSE_MAX_WAITING_TIME_SEC);
 
-    return random.Next(normalResponseMinWaitingTimeMilliSec, normalResponseMaxWaitingTimeMilliSec);
+    return random.Next(NORMAL_RESPONSE_MIN_WAITING_TIME_MILLI_SEC, NORMAL_RESPONSE_MAX_WAITING_TIME_MILLI_SEC);
 }
