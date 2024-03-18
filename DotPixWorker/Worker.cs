@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 namespace DotPixWorker;
 
 public class Worker(
-    IConsumerPaymentQueue consumerPaymentQueue,
+    IPaymentQueueConsumer paymentQueueConsumer,
     ILogger<Worker> logger,
     IOptions<AppParameters> options)
     : BackgroundService
@@ -14,7 +14,7 @@ public class Worker(
         try
         {
             logger.LogInformation($"Worker: {options.Value.WorkerName}");
-            await consumerPaymentQueue.Watch(stoppingToken);
+            await paymentQueueConsumer.Watch(stoppingToken);
         }
         catch (Exception e)
         {
