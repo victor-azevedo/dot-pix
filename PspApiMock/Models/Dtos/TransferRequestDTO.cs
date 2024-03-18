@@ -4,8 +4,9 @@ public class TransferStatus
 {
     public required OriginDTO Origin { get; set; }
     public required DestinyDTO Destiny { get; set; }
-    public int Amount { get; set; }
+    public required int Amount { get; set; }
     public string? Description { get; set; }
+    public required Guid PaymentId { get; set; }
 }
 
 public class OriginDTO
@@ -16,13 +17,15 @@ public class OriginDTO
 
 public class UserDTO
 {
-    public required string CPF { get; set; }
+    public required string Name { get; set; }
+    public required string MaskedCpf { get; set; }
 }
 
 public class AccountDTO
 {
     public required string Number { get; set; }
     public required string Agency { get; set; }
+    public required int BankId { get; set; }
 }
 
 public class DestinyDTO
