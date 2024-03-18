@@ -1,6 +1,6 @@
 namespace DotPixWorker.Interfaces;
 
-public interface IConsumerPaymentQueue
+public interface IPaymentQueueConsumer
 {
     Task Watch(CancellationToken stoppingToken);
 }

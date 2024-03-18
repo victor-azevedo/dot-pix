@@ -23,22 +23,14 @@ public class PspApiService(ILogger<PspApiService> logger) : IPspApiService
 
     public async Task<bool> PostPaymentPix(string pspApiBaseUrl, OutPostDestinyDto paymentDestiny)
     {
-        try
-        {
-            var client = GetHttpClient();
+        var client = GetHttpClient();
 
-            var postPaymentPixUrl = $"{pspApiBaseUrl}/payments/pix";
+        var postPaymentPixUrl = $"{pspApiBaseUrl}/payments/pix";
 
-            var content = ParseObjToContent(paymentDestiny);
-            var response = await client.PostAsync(postPaymentPixUrl, content);
+        var content = ParseObjToContent(paymentDestiny);
+        var response = await client.PostAsync(postPaymentPixUrl, content);
 
-            return response.IsSuccessStatusCode;
-        }
-        catch (TaskCanceledException e)
-        {
-            logger.LogWarning($"Timeout POST");
-            return false;
-        }
+        return response.IsSuccessStatusCode;
     }
 
     public async Task PatchPaymentPix(string pspApiBaseUrl, OutPatchOriginDto paymentStatus)
