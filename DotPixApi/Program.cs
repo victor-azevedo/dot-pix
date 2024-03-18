@@ -38,7 +38,7 @@ builder.Services.AddScoped<PaymentProviderAccountRepository>();
 builder.Services.AddScoped<PaymentService>();
 builder.Services.AddScoped<PaymentRepository>();
 
-builder.Services.AddScoped<PublisherPaymentQueue>();
+builder.Services.AddScoped<PaymentQueuePublisher>();
 
 builder.Services.AddEndpointsApiExplorer();
 
@@ -62,11 +62,7 @@ if (app.Environment.IsDevelopment())
 app.UseMetricServer();
 app.UseHttpMetrics(options => { options.AddCustomLabel("host", context => context.Request.Host.Host); });
 
-
 app.UseHttpsRedirection();
-
-app.UseMiddleware<ExceptionHandleMiddleware>();
-app.UseMiddleware<AuthenticationMiddleware>();
 
 app.MapControllers();
 
@@ -74,5 +70,8 @@ app.MapMetrics();
 
 if (!app.Environment.IsProduction())
     app.Seed();
+
+app.UseMiddleware<ExceptionHandleMiddleware>();
+app.UseMiddleware<AuthenticationMiddleware>();
 
 app.Run();
