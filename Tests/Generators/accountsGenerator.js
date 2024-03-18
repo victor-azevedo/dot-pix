@@ -1,33 +1,32 @@
 import {faker} from "@faker-js/faker";
-import {saveDataToJson, SEED_LENGTH} from "../utils.js";
+import {saveDataToJson, SEED_LENGTH, SEED_FILE_PATH} from "../utils.js"
 
-const accountsLength = SEED_LENGTH;
-const ACCOUNTS_FILE_PATH = "./Mocks/accounts.json";
+const dataLength = SEED_LENGTH;
+const filepath = `${SEED_FILE_PATH}/accounts.json`
+
 
 function createRandomAccounts() {
     function createAccount() {
-        const number = faker.string.numeric(5);
+        const account = faker.string.numeric(5);
         const agency = faker.string.numeric(5);
-        return {number, agency};
+        return {account, agency};
     }
 
     const accounts = []
-    for (let i = 0; i < accountsLength; i++) {
+    for (let i = 0; i < dataLength; i++) {
         accounts.push(createAccount());
     }
     return accounts;
 }
 
-function init() {
+export default async function createAccountsJson() {
     try {
-        console.log("Creating accounts...");
+        const data = createRandomAccounts();
 
-        saveDataToJson(createRandomAccounts(), ACCOUNTS_FILE_PATH);
+        await saveDataToJson(data, filepath);
     } catch
         (error) {
-        console.error(`Error creating accounts: ${error}`);
+        console.error(`Error creating data: ${error}`);
     }
 }
-
-init()
 
