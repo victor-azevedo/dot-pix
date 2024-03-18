@@ -5,5 +5,5 @@ namespace DotPixWorker.Interfaces;
 
 public interface IPaymentProviderDestinyService
 {
-    public Task HandlePaymentToDestiny(InPaymentQueueDto payment);
+    public Task<bool> HandlePaymentToDestiny(InPaymentQueueDto payment);
 }
