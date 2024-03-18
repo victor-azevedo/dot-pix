@@ -7,6 +7,7 @@ public class AppParameters
     public Database Database { get; set; }
     public RabbitMQ RabbitMq { get; set; }
     public string WorkerName { get; set; }
+    public string PspMockUrl { get; set; }
 }
 
 public class RabbitMQ
