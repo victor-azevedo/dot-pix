@@ -12,8 +12,11 @@ public class PaymentService(
     PixKeyService pixKeyService,
     HttpContextService httpContextService,
     PaymentRepository paymentRepository,
-    PublisherPaymentQueue publisherPaymentQueue)
+    PaymentQueuePublisher paymentQueuePublisher)
 {
+    private const int IDEMPOTENCY_PAYMENT_TIME_TOLERANCE = 30;
+    private const int PAYMENT_PROCESSING_TIME_LIMIT_SECONDS = 120;
+
     public async Task<OutPostPaymentDto> Create(InPostPaymentDto inPostPaymentDto)
     {
         var userCpfBody = inPostPaymentDto.Origin.User.Cpf;
@@ -43,8 +46,11 @@ public class PaymentService(
 
         await paymentRepository.Create(payment);
 
-        var paymentToQueue = new OutPaymentQueueDto(payment);
-        publisherPaymentQueue.Send(paymentToQueue);
+        var paymentProcessingExpireAt =
+            payment.CreatedAt.AddSeconds(PAYMENT_PROCESSING_TIME_LIMIT_SECONDS);
+
+        paymentQueuePublisher.Send(payment,
+            paymentProcessingExpireAt);
 
         var paymentResponse = new OutPostPaymentDto(payment);
         return paymentResponse;
@@ -52,8 +58,6 @@ public class PaymentService(
 
     private async Task ValidatePaymentIsNotRepeated(Payments payment)
     {
-        const int IDEMPOTENCY_PAYMENT_TIME_TOLERANCE = 30;
-
         var idempotencyKey = new PaymentIdempotencyKey(payment);
         var timeTolerance = DateTime.UtcNow.AddSeconds(-IDEMPOTENCY_PAYMENT_TIME_TOLERANCE);
 
