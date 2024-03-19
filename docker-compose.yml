@@ -1,113 +1,110 @@
 ﻿services:
-    rabbitmq:
-        image: rabbitmq:3-management
-        container_name: rabbitmq
-        restart: always
-        ports:
-            - 5672:5672
-            - 15672:15672
-        volumes:
-            - vol-dotpix-rabbitmq:/var/lib/rabbitmq/
-        networks:
-            - dotpix-rabbitmq
-
-    db:
-        image: postgres
-        container_name: dotpix_db
-        restart: always
-        ports:
-            - 5432:5432
-        environment:
-            POSTGRES_USER: postgres
-            POSTGRES_PASSWORD: postgres
-        healthcheck:
-            test: ["CMD-SHELL", "pg_isready -U postgres"]
-            interval: 5s
-            timeout: 5s
-            retries: 5
-        volumes:
-            - vol-dotpix-dbpostgres:/var/lib/postgresql/data
-        networks:
-            - dotpix-db
-
-    api:
-        image: dotpix-api
-        container_name: dotpix_api
-        restart: always
-        depends_on:
-            - db
-            - rabbitmq
-        build:
-            context: .
-            dockerfile: DotPixApi/Dockerfile
-        ports:
-            - 8080:8080
-        environment:
-            - ASPNETCORE_ENVIRONMENT=Test
-            - APPPARAMETERS__RABBITMQ__HOSTNAME=rabbitmq
-            - DATABASE__CONNECTIONSTRING=Host=db;Port=5432;Username=postgres;Password=postgres;Database=dotpix_test
-        networks:
-            - dotpix-rabbitmq
-            - dotpix-db
-
-    worker1:
-        image: dotpix-worker
-        container_name: worker1
-        restart: always
-        depends_on:
-            - rabbitmq
-        build:
-            context: .
-            dockerfile: DotPixWorker/Dockerfile
-        environment:
-            - APPPARAMETERS__WORKERNAME=worker1
-            - APPPARAMETERS__RABBITMQ__HOSTNAME=rabbitmq
-            - APPPARAMETERS__DATABASE__CONNECTIONSTRING=Host=db;Port=5432;Username=postgres;Password=postgres;Database=dotpix_dev
-        networks:
-            - dotpix-payment
-            - dotpix-rabbitmq
-            - dotpix-db
-
-    worker2:
-        image: dotpix-worker
-        container_name: worker2
-        restart: always
-        depends_on:
-            - worker1
-        build:
-            context: .
-            dockerfile: DotPixWorker/Dockerfile
-        environment:
-            - APPPARAMETERS__WORKERNAME=worker2
-            - APPPARAMETERS__RABBITMQ__HOSTNAME=rabbitmq
-            - APPPARAMETERS__DATABASE__CONNECTIONSTRING=Host=db;Port=5432;Username=postgres;Password=postgres;Database=dotpix_dev
-        networks:
-            - dotpix-payment
-            - dotpix-rabbitmq
-            - dotpix-db
-
-    pspapi:
-        image: psp-api-mock
-        container_name: pspapi
-        build:
-            context: .
-            dockerfile: PspApiMock/Dockerfile
-        ports:
-            - 8081:8080
-        networks:
-            - dotpix-payment
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - vol-dotpix-rabbitmq:/var/lib/rabbitmq/
+    networks:
+      - dotpix-rabbitmq
+  
+  db:
+    image: postgres
+    container_name: dotpix_db
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - vol-dotpix-dbpostgres:/var/lib/postgresql/data
+    networks:
+      - dotpix-db
+  
+  api:
+    image: dotpix-api
+    container_name: dotpix_api
+    restart: always
+    depends_on:
+      - db
+      - rabbitmq
+    build:
+      context: .
+      dockerfile: DotPixApi/Dockerfile
+    ports:
+      - 8080:8080
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Test
+      - APPPARAMETERS__RABBITMQ__HOSTNAME=rabbitmq
+    networks:
+      - dotpix-rabbitmq
+      - dotpix-db
+  
+  paymentworker1:
+    image: dotpix-payment-worker
+    container_name: payment-worker1
+    restart: always
+    depends_on:
+      - rabbitmq
+    build:
+      context: .
+      dockerfile: DotPixPaymentWorker/Dockerfile
+    environment:
+      - APPPARAMETERS__WORKERNAME=Payment Worker 1
+      - APPPARAMETERS__RABBITMQ__HOSTNAME=rabbitmq
+    networks:
+      - dotpix-payment
+      - dotpix-rabbitmq
+      - dotpix-db
+  
+  paymentworker2:
+    image: dotpix-payment-worker
+    container_name: payment-worker2
+    restart: always
+    depends_on:
+      - paymentworker1
+    build:
+      context: .
+      dockerfile: DotPixPaymentWorker/Dockerfile
+    environment:
+      - APPPARAMETERS__WORKERNAME=Payment Worker 2
+      - APPPARAMETERS__RABBITMQ__HOSTNAME=rabbitmq
+    networks:
+      - dotpix-payment
+      - dotpix-rabbitmq
+      - dotpix-db
+  
+  pspapi:
+    image: psp-api-mock
+    container_name: pspapi
+    build:
+      context: .
+      dockerfile: PspApiMock/Dockerfile
+    ports:
+      - 8081:8080
+    networks:
+      - dotpix-payment
 
 networks:
-    dotpix-db:
-        driver: bridge
-        name: net-dotpix-db
-    dotpix-payment:
-        driver: bridge
-        name: net-dotpix-payment
-    dotpix-rabbitmq:
-        driver: bridge
-        name: net-dotpix-rabbitmq
+  dotpix-db:
+    driver: bridge
+    name: net-dotpix-db
+  dotpix-payment:
+    driver: bridge
+    name: net-dotpix-payment
+  dotpix-rabbitmq:
+    driver: bridge
+    name: net-dotpix-rabbitmq
 
 volumes:
-    vol-dotpix-dbpostgres:
-    vol-dotpix-rabbitmq:
+  vol-dotpix-dbpostgres:
+  vol-dotpix-rabbitmq:

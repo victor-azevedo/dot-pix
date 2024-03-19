@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotPixApi", "DotPixApi\DotPixApi.csproj", "{4E25B978-DE79-43C2-ADED-B5B37B3E3005}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotPixWorker", "DotPixWorker\DotPixWorker.csproj", "{3696711E-B0F7-4842-A0CF-8D85BE8919A9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotPixPaymentWorker", "DotPixPaymentWorker\DotPixPaymentWorker.csproj", "{3696711E-B0F7-4842-A0CF-8D85BE8919A9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PspApiMock", "PspApiMock\PspApiMock.csproj", "{AE600510-CB39-4D61-8318-78F5BD8D979D}"
 EndProject
