@@ -1,6 +1,4 @@
-import { faker } from "@faker-js/faker";
 import * as dotenv from "dotenv";
-import { UniqueEnforcer } from "enforce-unique";
 import knex from "knex";
 import { BODY_TEST_FILE_PATH, BODY_TEST_LENGTH, saveDataToJson } from "../../utils.js";
 
@@ -10,8 +8,6 @@ const db = knex({
     client: "pg",
     connection: process.env.DATABASE_URL,
 });
-
-const uniqueEnforcerUudi = new UniqueEnforcer();
 
 async function init() {
     try {
@@ -24,7 +20,10 @@ async function init() {
         const requests = users.map((user, index) => ({
             token: paymentProviderTokens[index].token,
             payload: {
-                key: createKey(),
+                key: {
+                    type: "Random",
+                    key: null, // generate in k6
+                },
                 user: {
                     cpf: user.cpf,
                 },
@@ -41,17 +40,8 @@ async function init() {
     } catch (error) {
         console.error("An error occurred during body generate:", error);
     } finally {
-        uniqueEnforcerUudi.reset();
         await db.destroy();
     }
-}
-
-function createKey() {
-    const value = uniqueEnforcerUudi.enforce(() => {
-        return faker.string.uuid();
-    });
-    const type = "Random";
-    return { value, type };
 }
 
 await init();
