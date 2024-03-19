@@ -1,8 +1,8 @@
-import {faker} from "@faker-js/faker";
-import {saveDataToJson, SEED_LENGTH, SEED_FILE_PATH} from "../utils.js"
+import { faker } from "@faker-js/faker";
+import { saveDataToJson, SEED_LENGTH, SEED_FILE_PATH } from "../utils.js";
 
 const dataLength = SEED_LENGTH;
-const filepath = `${SEED_FILE_PATH}/paymentProviders.json`
+const filepath = `${SEED_FILE_PATH}/paymentProviders.json`;
 
 function createRandomPaymentProviders() {
     function createPaymentProvider() {
@@ -10,12 +10,12 @@ function createRandomPaymentProviders() {
         const apiUrl = "http://pspapi:8081";
 
         return {
-            "Name": name,
-            "ApiUrl": apiUrl,
+            name: name,
+            api_url: apiUrl,
         };
     }
 
-    const paymentProviders = []
+    const paymentProviders = [];
     for (let i = 0; i < dataLength; i++) {
         paymentProviders.push(createPaymentProvider());
     }
@@ -27,8 +27,7 @@ export default async function createPaymentProvidersJson() {
     try {
         const data = createRandomPaymentProviders();
         await saveDataToJson(data, filepath);
-    } catch
-        (error) {
+    } catch (error) {
         console.error(`Error creating data: ${error}`);
     }
 }

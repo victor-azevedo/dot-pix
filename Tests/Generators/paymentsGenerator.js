@@ -1,22 +1,29 @@
-import {faker} from "@faker-js/faker";
-import {saveDataToJson, SEED_LENGTH, SEED_FILE_PATH} from "../utils.js"
+import { faker } from "@faker-js/faker";
+import { UniqueEnforcer } from "enforce-unique";
+import { SEED_FILE_PATH, SEED_LENGTH, saveDataToJson } from "../utils.js";
 
 const dataLength = SEED_LENGTH;
-const filepath = `${SEED_FILE_PATH}/payments.json`
+const filepath = `${SEED_FILE_PATH}/payments.json`;
 
 function createRandomPayments() {
+    const uniqueEnforcerUudi = new UniqueEnforcer();
+
     function createPayment() {
-        const status = "SUCCESS"
-        const amount = faker.number.int({min: 1, max: 9000000});
+        const id = uniqueEnforcerUudi.enforce(() => {
+            return faker.string.uuid();
+        });
+        const status = "SUCCESS";
+        const amount = faker.number.int({ min: 1, max: 9000000 });
         const description = faker.word.adjective();
         return {
-            "Status": status,
-            "Amount": amount,
-            "Description": description,
+            id,
+            status,
+            amount,
+            description,
         };
     }
 
-    const payments = []
+    const payments = [];
     for (let i = 0; i < dataLength; i++) {
         payments.push(createPayment());
     }
@@ -28,8 +35,7 @@ export default async function createPaymentsJson() {
         const data = createRandomPayments();
 
         await saveDataToJson(data, filepath);
-    } catch
-        (error) {
+    } catch (error) {
         console.error(`Error creating data: ${error}`);
     }
 }

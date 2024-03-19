@@ -1,9 +1,9 @@
-import {faker} from "@faker-js/faker";
-import {UniqueEnforcer} from "enforce-unique";
-import {saveDataToJson, SEED_LENGTH, SEED_FILE_PATH} from "../utils.js"
+import { faker } from "@faker-js/faker";
+import { UniqueEnforcer } from "enforce-unique";
+import { SEED_FILE_PATH, SEED_LENGTH, saveDataToJson } from "../utils.js";
 
 const dataLength = SEED_LENGTH;
-const filepath = `${SEED_FILE_PATH}/users.json`
+const filepath = `${SEED_FILE_PATH}/users.json`;
 
 function createRandomUsers() {
     const uniqueEnforcerCpf = new UniqueEnforcer();
@@ -14,12 +14,12 @@ function createRandomUsers() {
         });
         const name = faker.person.fullName();
         return {
-            "Name": name,
-            "Cpf": cpf,
+            name,
+            cpf,
         };
     }
 
-    const users = []
+    const users = [];
     for (let i = 0; i < dataLength; i++) {
         users.push(createUser());
     }
@@ -31,8 +31,7 @@ export default async function createUsersJson() {
         const data = createRandomUsers();
 
         await saveDataToJson(data, filepath);
-    } catch
-        (error) {
+    } catch (error) {
         console.error(`Error creating data: ${error}`);
     }
 }

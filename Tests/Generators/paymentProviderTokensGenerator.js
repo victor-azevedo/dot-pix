@@ -1,9 +1,9 @@
-import {faker} from "@faker-js/faker";
-import {UniqueEnforcer} from "enforce-unique";
-import {saveDataToJson, SEED_FILE_PATH, SEED_LENGTH} from "../utils.js"
+import { faker } from "@faker-js/faker";
+import { UniqueEnforcer } from "enforce-unique";
+import { saveDataToJson, SEED_FILE_PATH, SEED_LENGTH } from "../utils.js";
 
 const dataLength = SEED_LENGTH;
-const filepath = `${SEED_FILE_PATH}/paymentProviderTokens.json`
+const filepath = `${SEED_FILE_PATH}/paymentProviderTokens.json`;
 
 function createRandomPaymentProviderToken() {
     const uniqueEnforcerUudi = new UniqueEnforcer();
@@ -14,7 +14,7 @@ function createRandomPaymentProviderToken() {
         });
     }
 
-    const paymentProviderTokens = []
+    const paymentProviderTokens = [];
     for (let i = 0; i < dataLength; i++) {
         paymentProviderTokens.push(createPaymentProviderToken());
     }
@@ -26,8 +26,7 @@ export default async function createPaymentProviderTokensJson() {
     try {
         const data = createRandomPaymentProviderToken();
         await saveDataToJson(data, filepath);
-    } catch
-        (error) {
+    } catch (error) {
         console.error(`Error creating data: ${error}`);
     }
 }

@@ -1,12 +1,13 @@
-import createUsersJson from "./usersGenerator.js"
-import createPaymentProvidersJson from "./paymentProvidersGenerator.js"
-import createPaymentProviderTokensJson from "./paymentProviderTokensGenerator.js"
 import createAccountsJson from "./accountsGenerator.js";
 import createKeysJson from "./keysGenerator.js";
+import createPaymentProviderTokensJson from "./paymentProviderTokensGenerator.js";
+import createPaymentProvidersJson from "./paymentProvidersGenerator.js";
 import createPaymentsJson from "./paymentsGenerator.js";
+import createUsersJson from "./usersGenerator.js";
 
 async function createData() {
     try {
+        console.log("\n*****************************************\n");
         console.log("Creating data...");
         await createUsersJson();
         await createPaymentProvidersJson();
@@ -14,11 +15,10 @@ async function createData() {
         await createAccountsJson();
         await createKeysJson();
         await createPaymentsJson();
-    } catch
-        (error) {
-        console.error(`Error creating seed: ${error}`);
+        console.log("\n*****************************************\n");
+    } catch (error) {
+        console.error("An error occurred during generate seed data:", error);
     }
 }
 
-await createData()
-
+await createData();
