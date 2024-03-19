@@ -1,19 +1,23 @@
-import { uuidv4 } from "https://jslib.k6.io/k6-utils/1.4.0/index.js";
+import { randomItem, uuidv4 } from "https://jslib.k6.io/k6-utils/1.4.0/index.js";
 import { check } from "k6";
 import { SharedArray } from "k6/data";
 import http from "k6/http";
-import { API_URL, defaultOptions, getRandomElement } from "./helpers.js";
+import { API_URL, defaultOptions, formatDate, isReportSummary } from "./helpers.js";
 
-const PAYLOAD_FILE_PATH = "../RequestsData/postKeys.json";
+const routFileName = "postKeys";
+
+const payloadFilePath = `../RequestsData/${routFileName}.json`;
+
+const reportPath = `./.k6/reports/${formatDate()}-${routFileName}TestSummary.json`;
 
 const requests = new SharedArray("_", function () {
-    return JSON.parse(open(PAYLOAD_FILE_PATH));
+    return JSON.parse(open(payloadFilePath));
 });
 
 export const options = defaultOptions;
 
 export default function () {
-    const { token, payload } = getRandomElement(requests);
+    const { token, payload } = randomItem(requests);
 
     const copiedPayload = JSON.parse(JSON.stringify(payload));
 
@@ -36,4 +40,12 @@ export default function () {
         "is not conflict": (r) => r.status != 409,
         "is not repeated key": (r) => !r.body.includes("The key value is already in use"),
     });
+}
+
+export function handleSummary(data) {
+    if (isReportSummary) {
+        return {
+            [reportPath]: JSON.stringify(data),
+        };
+    }
 }

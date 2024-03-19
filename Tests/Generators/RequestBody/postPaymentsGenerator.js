@@ -20,7 +20,7 @@ async function init() {
             .where("user_id", user.id)
             .limit(1);
 
-        const [token] = await db
+        const [{ token }] = await db
             .select("token")
             .from("payment_provider_tokens")
             .where("payment_provider_id", account.payment_provider_id)
@@ -28,7 +28,7 @@ async function init() {
 
         const keys = await db.select("type", "value").from("pix_keys").limit(BODY_TEST_LENGTH);
 
-        const requests = keys.map((key, index) => ({
+        const requests = keys.map((key) => ({
             token,
             payload: {
                 origin: {
@@ -46,7 +46,7 @@ async function init() {
                         type: key.type,
                     },
                 },
-                amount: faker.number.int({ min: 1, max: 9000000 }),
+                amount: 0, // generate in k6
                 description: faker.word.adjective(),
             },
         }));
