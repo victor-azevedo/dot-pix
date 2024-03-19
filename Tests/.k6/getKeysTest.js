@@ -1,47 +1,26 @@
+import { SharedArray } from "k6/data";
 import http from "k6/http";
-import {
-    API_URL,
-    PAYLOAD_LENGTH,
-    defaultOptions,
-    getRandomToken,
-    getRandomElement,
-    parseJsonToArray,
-} from "./helpers.js";
+import { API_URL, defaultOptions, getRandomElement } from "./helpers.js";
 
-const KEYS_FILE_PATH = "../Mocks/keys.json";
+const PAYLOAD_FILE_PATH = "../RequestsData/getKeys.json";
+
+const requests = new SharedArray("_", function () {
+    return JSON.parse(open(PAYLOAD_FILE_PATH));
+});
 
 export const options = defaultOptions;
 
-const payloads = getKeyPayloadsGenerator(PAYLOAD_LENGTH);
-
-const token = getRandomToken();
-
 export default function () {
-    const {type, value} = getRandomElement(payloads);
+    const { token, payload } = getRandomElement(requests);
+
+    const { type, value } = payload;
 
     const url = `${API_URL}/keys/${type}/${value}`;
     const params = {
         headers: {
-            'Authorization': `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
         },
     };
 
     http.get(url, params);
-}
-
-function getKeyPayloadsGenerator(length) {
-    console.log("Creating payload...");
-    const keys = parseJsonToArray("keys", KEYS_FILE_PATH);
-
-    if (keys.length < length)
-        throw new Error('Small mock`s files');
-
-    const payloads = []
-    for (let i = 0; i < length; i++) {
-        const {type, value} = getRandomElement(keys);
-        payloads.push({type, value});
-    }
-
-    console.log("Payloads created successfully!")
-    return payloads;
 }
