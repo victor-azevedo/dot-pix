@@ -8,9 +8,9 @@
         "seed": "node ./seedDbTest.js",
         "clean-seed": "npm run seed clean",
         "generate-clean-seed": "npm run generate && npm run clean-seed",
-        "health-test": "k6 run ./.k6/healthTest.js  --out json=./.k6/reports/healthTestReport.json",
+        "load-test-get-health": "k6 run ./.k6/getHealthTest.js  --out json=./.k6/reports/getHealthTestReport.json",
         "load-test-post-keys": "k6 run ./.k6/postKeysTest.js  --out json=./.k6/reports/postKeysTestReport.json",
-        "getKeys-test": "k6 run ./.k6/getKeysTest.js  --out json=./.k6/reports/getKeysTestReport.json"
+        "load-test-get-keys": "k6 run ./.k6/getKeysTest.js  --out json=./.k6/reports/getKeysTestReport.json"
     },
     "devDependencies": {
         "@faker-js/faker": "^8.4.1",
