@@ -4,8 +4,6 @@ namespace DotPixApi.Data;
 
 public static class AppDbInitializer
 {
-    private const string SeedDevJsonPath = "./Data/Seed/seedDev.json";
-    private const string SeedTestJsonPath = "../Database/seedTest.json";
 
     public static WebApplication Seed(this WebApplication app)
     {
@@ -16,11 +14,7 @@ public static class AppDbInitializer
 
             context.Database.EnsureCreated();
 
-            var seedJsonPath = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Test"
-                ? SeedTestJsonPath
-                : SeedDevJsonPath;
-
-            var seedHandler = new SeedHandler(context, seedJsonPath);
+            var seedHandler = new SeedHandler(context);
             seedHandler.EnsureDatabaseIsPopulated();
 
             return app;

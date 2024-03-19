@@ -4,8 +4,10 @@ using static System.IO.File;
 
 namespace DotPixApi.Data.Seed;
 
-public class SeedHandler(AppDbContext context, string seedJsonPath)
+public class SeedHandler(AppDbContext context)
 {
+    private const string SEED_DEV_JSON_PATH = "./Data/Seed/seedDev.json";
+
     public void EnsureDatabaseIsPopulated()
     {
         var someUserOrNull = context.User.FirstOrDefault();
@@ -19,7 +21,7 @@ public class SeedHandler(AppDbContext context, string seedJsonPath)
 
         Console.WriteLine("Initiating database seeding process...");
 
-        var seedData = GetSeedData(seedJsonPath);
+        var seedData = GetSeedData(SEED_DEV_JSON_PATH);
 
         if (someUserOrNull == null)
             PopulateUserData(seedData.Users);
