@@ -29,14 +29,14 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "test": {
+    "LoadTest": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": false,
       "launchUrl": "swagger",
       "applicationUrl": "http://localhost:5200",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Test"
+        "ASPNETCORE_ENVIRONMENT": "LoadTest"
       }
     },
     "IIS Express": {

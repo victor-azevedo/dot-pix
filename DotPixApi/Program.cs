@@ -11,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Database
 builder.Services.AddDbContext<AppDbContext>(opts =>
 {
-    var connectionString = builder.Configuration["Database:ConnectionString"] ?? string.Empty;
+    var connectionString = builder.Configuration["AppParameters:Database:ConnectionString"] ?? string.Empty;
     opts.UseNpgsql(connectionString, options => { options.MaxBatchSize(5_000); });
 });
 
@@ -68,7 +68,7 @@ app.MapControllers();
 
 app.MapMetrics();
 
-if (!app.Environment.IsProduction())
+if (app.Environment.IsDevelopment())
     app.Seed();
 
 app.UseMiddleware<ExceptionHandleMiddleware>();
