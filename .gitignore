@@ -269,3 +269,5 @@ __pycache__/
 # tools/
 
 Tests/.env
+
+./.env

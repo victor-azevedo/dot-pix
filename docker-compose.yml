@@ -6,6 +6,11 @@
     ports:
       - 5672:5672
       - 15672:15672
+    healthcheck:
+      test: rabbitmq-diagnostics check_port_connectivity
+      interval: 5s
+      timeout: 5s
+      retries: 3
     volumes:
       - vol-dotpix-rabbitmq:/var/lib/rabbitmq/
     networks:
@@ -18,8 +23,9 @@
     ports:
       - 5432:5432
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 5s
@@ -35,16 +41,17 @@
     container_name: dotpix_api
     restart: always
     depends_on:
-      - db
-      - rabbitmq
+      db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     build:
       context: .
       dockerfile: DotPixApi/Dockerfile
     ports:
       - 8080:8080
     environment:
-      - ASPNETCORE_ENVIRONMENT=Test
-      - APPPARAMETERS__RABBITMQ__HOSTNAME=rabbitmq
+      APPPARAMETERS__RABBITMQ__HOSTNAME: rabbitmq
     networks:
       - dotpix-rabbitmq
       - dotpix-db
@@ -54,13 +61,14 @@
     container_name: payment-worker1
     restart: always
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
     build:
       context: .
       dockerfile: DotPixPaymentWorker/Dockerfile
     environment:
-      - APPPARAMETERS__WORKERNAME=Payment Worker 1
-      - APPPARAMETERS__RABBITMQ__HOSTNAME=rabbitmq
+      APPPARAMETERS__WORKERNAME: Payment Worker 1
+      APPPARAMETERS__RABBITMQ__HOSTNAME: rabbitmq
     networks:
       - dotpix-payment
       - dotpix-rabbitmq
@@ -71,13 +79,14 @@
     container_name: payment-worker2
     restart: always
     depends_on:
-      - paymentworker1
+      rabbitmq:
+        condition: service_healthy
     build:
       context: .
       dockerfile: DotPixPaymentWorker/Dockerfile
     environment:
-      - APPPARAMETERS__WORKERNAME=Payment Worker 2
-      - APPPARAMETERS__RABBITMQ__HOSTNAME=rabbitmq
+      APPPARAMETERS__WORKERNAME: Payment Worker 2
+      APPPARAMETERS__RABBITMQ__HOSTNAME: rabbitmq
     networks:
       - dotpix-payment
       - dotpix-rabbitmq

@@ -1,0 +1,17 @@
+﻿services:
+  db:
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+  
+  api:
+    environment:
+      ASPNETCORE_ENVIRONMENT: LoadTest
+  
+  paymentworker1:
+    environment:
+      DOTNET_ENVIRONMENT: LoadTest
+  
+  paymentworker2:
+    environment:
+      DOTNET_ENVIRONMENT: LoadTest
