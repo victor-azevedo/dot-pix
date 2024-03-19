@@ -1,51 +1,51 @@
-version: '3.8'
+version: "3.8"
 services:
-  node-exporter:
-    image: quay.io/prometheus/node-exporter:latest
-    command:
-      - '--path.rootfs=/host'
-    pid: host
-    ports:
-      - 9100:9100
-    restart: unless-stopped
-    volumes:
-      - '/:/host:ro,rslave'
+    node-exporter:
+        image: quay.io/prometheus/node-exporter:latest
+        command:
+            - "--path.rootfs=/host"
+        pid: host
+        ports:
+            - 9100:9100
+        restart: unless-stopped
+        volumes:
+            - "/:/host:ro,rslave"
 
-  prometheus:
-    container_name: prometheus
-    image: prom/prometheus:latest
-    ports:
-      - 9090:9090
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    prometheus:
+        container_name: prometheus
+        image: prom/prometheus:latest
+        ports:
+            - 9090:9090
+        volumes:
+            - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
 
-  grafana:
-    container_name: grafana
-    image: grafana/grafana:latest
-    ports:
-      - 3000:3000
-    volumes:
-      - grafana:/var/lib/grafana
-  
-  postgres-exporter:
-    image: quay.io/prometheuscommunity/postgres-exporter:latest
-    container_name: postgres-exporter
-    ports:
-      - 9187:9187
-    environment:
-      - DATA_SOURCE_URI=postgres/postgres?sslmode=disable
-      - DATA_SOURCE_USER=postgres
-      - DATA_SOURCE_PASS=postgres
-    networks:
-      - default
-      - dotpix-db
-    external_links:
-      - dotpix-db
+    grafana:
+        container_name: grafana
+        image: grafana/grafana:latest
+        ports:
+            - 3000:3000
+        volumes:
+            - grafana:/var/lib/grafana
+
+    postgres-exporter:
+        image: quay.io/prometheuscommunity/postgres-exporter:latest
+        container_name: postgres-exporter
+        ports:
+            - 9187:9187
+        environment:
+            - DATA_SOURCE_URI=db/postgres?sslmode=disable
+            - DATA_SOURCE_USER=postgres
+            - DATA_SOURCE_PASS=postgres
+        networks:
+            - default
+            - dotpix-db
+        external_links:
+            - dotpix-db
 
 volumes:
-  grafana:
+    grafana:
 
 networks:
-  dotpix-db:
-    external: true
-    name: dotpix-db
+    dotpix-db:
+        external: true
+        name: net-dotpix-db
