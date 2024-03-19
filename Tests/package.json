@@ -8,9 +8,10 @@
         "seed": "node ./seedDbTest.js",
         "clean-seed": "npm run seed clean",
         "generate-clean-seed": "npm run generate && npm run clean-seed",
-        "load-test-get-health": "k6 run ./.k6/getHealthTest.js  --out json=./.k6/reports/getHealthTestReport.json",
-        "load-test-post-keys": "k6 run ./.k6/postKeysTest.js  --out json=./.k6/reports/postKeysTestReport.json",
-        "load-test-get-keys": "k6 run ./.k6/getKeysTest.js  --out json=./.k6/reports/getKeysTestReport.json"
+        "load-test-get-health": "node Generators/RequestBody/getKeysGenerator.js && k6 run ./.k6/getHealthTest.js  --out json=./.k6/reports/getHealthTestReport.json",
+        "load-test-get-keys": "node Generators/RequestBody/getKeysGenerator.js && k6 run ./.k6/getKeysTest.js  --out json=./.k6/reports/getKeysTestReport.json",
+        "load-test-post-keys": "node Generators/RequestBody/postKeysGenerator.js && k6 run ./.k6/postKeysTest.js  --out json=./.k6/reports/postKeysTestReport.json",
+        "load-test-post-payments": "node Generators/RequestBody/postPaymentsGenerator.js && k6 run ./.k6/postPaymentsTest.js  --out json=./.k6/reports/postPaymentsTestReport.json"
     },
     "devDependencies": {
         "@faker-js/faker": "^8.4.1",
