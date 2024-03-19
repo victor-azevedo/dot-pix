@@ -1,77 +1,39 @@
+import { uuidv4 } from "https://jslib.k6.io/k6-utils/1.4.0/index.js";
+import { check } from "k6";
+import { SharedArray } from "k6/data";
 import http from "k6/http";
-import {
-    API_URL,
-    PAYLOAD_LENGTH,
-    defaultOptions,
-    usersSeed,
-    getRandomToken,
-    getRandomElement,
-    parseJsonToArray
-} from "./helpers.js";
+import { API_URL, defaultOptions, getRandomElement } from "./helpers.js";
 
-const ACCOUNTS_FILE_PATH = "../Mocks/accounts.json";
-const KEYS_FILE_PATH = "../Mocks/keys.json";
+const PAYLOAD_FILE_PATH = "../RequestsData/postKeys.json";
 
-const payloads = postKeyPayloadsGenerator(PAYLOAD_LENGTH);
+const requests = new SharedArray("_", function () {
+    return JSON.parse(open(PAYLOAD_FILE_PATH));
+});
 
 export const options = defaultOptions;
+
 export default function () {
+    const { token, payload } = getRandomElement(requests);
+
+    const copiedPayload = JSON.parse(JSON.stringify(payload));
+
+    const randomUUID = uuidv4();
+    copiedPayload.key.value = randomUUID;
+
     const url = `${API_URL}/keys`;
     const params = {
         headers: {
-            'Authorization': `Bearer ${getRandomToken()}`,
-            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
         },
     };
 
-    const payload = JSON.stringify(getRandomElement(payloads));
+    const payloadStr = JSON.stringify(copiedPayload);
 
-    http.post(url, payload, params);
+    const res = http.post(url, payloadStr, params);
 
-}
-
-function postKeyPayloadsGenerator(length) {
-    console.log("Creating payloads...");
-    const accounts = parseJsonToArray("accounts", ACCOUNTS_FILE_PATH);
-    const keys = parseJsonToArray("keys", KEYS_FILE_PATH);
-
-    if (accounts.length < length || keys.length < length || usersSeed.length < length)
-        throw new Error('Small mock`s files');
-
-    const payloads = []
-    for (let i = 0; i < length; i++) {
-        const key = getRandomElement(keys);
-        const account = getRandomElement(accounts);
-        const user = getRandomElement(usersSeed);
-        payloads.push(postKeysPayloadParse({key, account, user}));
-    }
-
-    console.log("Payloads created successfully!")
-    return payloads;
-}
-
-function postKeysPayloadParse({key, account, user}) {
-    return {
-        "key":
-            {
-                "value":
-                    key["value"],
-                "type":
-                    key["type"]
-            }
-        ,
-        "user":
-            {
-                "cpf":
-                    user["Cpf"]
-            }
-        ,
-        "account":
-            {
-                "number":
-                    account["number"],
-                "agency":
-                    account["agency"]
-            }
-    }
+    check(res, {
+        "is not conflict": (r) => r.status != 409,
+        "is not repeated key": (r) => !r.body.includes("The key value is already in use"),
+    });
 }

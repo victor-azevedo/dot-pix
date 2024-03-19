@@ -4,9 +4,11 @@ import fs from "fs";
 dotenv.config();
 
 export const SEED_LENGTH = process.env.SEED_LENGTH || 100;
+export const BODY_TEST_LENGTH = process.env.BODY_TEST_LENGTH || 100;
 export const SEED_FILE_PATH = "./SeedData";
+export const BODY_TEST_FILE_PATH = "./RequestsData";
 
-export function saveDataToJson(data, filepath) {
+export async function saveDataToJson(data, filepath) {
     console.log(`Creating data ${filepath}...`);
 
     fs.writeFile(filepath, JSON.stringify(data), "utf-8", (err) => {

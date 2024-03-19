@@ -9,7 +9,7 @@
         "clean-seed": "npm run seed clean",
         "generate-clean-seed": "npm run generate && npm run clean-seed",
         "health-test": "k6 run ./.k6/healthTest.js  --out json=./.k6/reports/healthTestReport.json",
-        "postKeys-test": "npm run accounts-generator && npm run keys-generator && k6 run ./.k6/postKeysTest.js  --out json=./.k6/reports/postKeysTestReport.json",
+        "load-test-post-keys": "k6 run ./.k6/postKeysTest.js  --out json=./.k6/reports/postKeysTestReport.json",
         "getKeys-test": "k6 run ./.k6/getKeysTest.js  --out json=./.k6/reports/getKeysTestReport.json"
     },
     "devDependencies": {
