@@ -7,13 +7,14 @@ namespace DotPixApi.Services;
 
 public class RabbitMqPublisherService(IConnectionFactory factory) : IQueuePublisherService
 {
-    public void PublishMessage<T>(string queueName, T messageObj)
+    public void PublishMessage<T>(string queueName, T messageObj, Dictionary<string, object>? headers)
     {
         using var connection = factory.CreateConnection();
         using var channel = connection.CreateModel();
 
         var basicProperties = channel.CreateBasicProperties();
         basicProperties.Persistent = true;
+        basicProperties.Headers = headers;
 
         DeclareQueue(channel, queueName);
 
