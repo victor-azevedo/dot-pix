@@ -53,6 +53,7 @@ builder.Services.AddScoped<ConciliationService>();
 
 builder.Services.AddScoped<IQueuePublisherService, RabbitMqPublisherService>();
 builder.Services.AddScoped<PaymentQueuePublisher>();
+builder.Services.AddScoped<ConciliationQueuePublisher>();
 
 builder.Services.AddEndpointsApiExplorer();
 
