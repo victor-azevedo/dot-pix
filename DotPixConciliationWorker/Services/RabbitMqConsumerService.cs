@@ -1,19 +1,17 @@
 using DotPixConciliationWorker.Interfaces;
-using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
 namespace DotPixConciliationWorker.Services;
 
-public class QueueConsumerService<TMessageProcessor>(
+public class RabbitMqConsumerService<TMessageProcessor>(
+    IConnectionFactory factory,
     IMessageProcessor<ConciliationMessageProcessor> messageProcessor,
-    IOptions<AppParameters> options,
-    ILogger<QueueConsumerService<ConciliationMessageProcessor>> logger)
+    ILogger<RabbitMqConsumerService<ConciliationMessageProcessor>> logger)
     : IQueueConsumerService<TMessageProcessor>
 {
-    public async Task StartConsuming(string queueName, CancellationToken stoppingToken)
+    public async Task ConsumeMessage(string queueName, CancellationToken stoppingToken)
     {
-        var factory = new ConnectionFactory { HostName = options.Value.RabbitMq.HostName };
         using var connection = factory.CreateConnection();
         using var channel = connection.CreateModel();
 

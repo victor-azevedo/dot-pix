@@ -16,7 +16,7 @@ public class ConciliationWorker(
         {
             logger.LogInformation($"Worker: {options.Value.WorkerName}");
 
-            await conciliationConsumerService.StartConsuming("conciliation", stoppingToken);
+            await conciliationConsumerService.ConsumeMessage("conciliation", stoppingToken);
         }
         catch (Exception e)
         {
