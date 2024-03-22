@@ -1,10 +1,14 @@
 using System.Text.Json.Serialization;
 using DotPixApi.Data;
+using DotPixApi.Interfaces;
 using DotPixApi.Middlewares;
+using DotPixApi.Options;
 using DotPixApi.Repositories;
 using DotPixApi.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Prometheus;
+using RabbitMQ.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +19,13 @@ builder.Services.AddDbContext<AppDbContext>(opts =>
     opts.UseNpgsql(connectionString, options => { options.MaxBatchSize(5_000); });
 });
 
+// Message Broker
+builder.Services.Configure<RabbitMqOptions>(builder.Configuration.GetSection("AppParameters:RabbitMq"));
+builder.Services.AddSingleton<IConnectionFactory>(serviceProvider =>
+{
+    var options = serviceProvider.GetRequiredService<IOptions<RabbitMqOptions>>().Value;
+    return new ConnectionFactory() { HostName = options.HostName };
+});
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -38,6 +49,9 @@ builder.Services.AddScoped<PaymentProviderAccountRepository>();
 builder.Services.AddScoped<PaymentService>();
 builder.Services.AddScoped<PaymentRepository>();
 
+builder.Services.AddScoped<ConciliationService>();
+
+builder.Services.AddScoped<IQueuePublisherService, RabbitMqPublisherService>();
 builder.Services.AddScoped<PaymentQueuePublisher>();
 
 builder.Services.AddEndpointsApiExplorer();
