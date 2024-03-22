@@ -46,11 +46,11 @@ public class PaymentService(
 
         await paymentRepository.Create(payment);
 
+        // Publish in Queue
         var paymentProcessingExpireAt =
             payment.CreatedAt.AddSeconds(PAYMENT_PROCESSING_TIME_LIMIT_SECONDS);
-
-        paymentQueuePublisher.Send(payment,
-            paymentProcessingExpireAt);
+        var paymentQueueDtoDto = new OutPaymentQueueDto(payment, paymentProcessingExpireAt);
+        paymentQueuePublisher.PublishMessage(paymentQueueDtoDto);
 
         var paymentResponse = new OutPostPaymentDto(payment);
         return paymentResponse;
