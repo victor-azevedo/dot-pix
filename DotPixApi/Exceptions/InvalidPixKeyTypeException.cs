@@ -1,5 +1,3 @@
-using DotPixApi.Models;
-
 namespace DotPixApi.Exceptions;
 
 public class InvalidPixKeyTypeException(
