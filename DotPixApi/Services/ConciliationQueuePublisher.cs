@@ -9,6 +9,6 @@ public class ConciliationQueuePublisher(IQueuePublisherService queuePublisherSer
 
     public void PublishMessage(OutConciliationQueueDto conciliationDto)
     {
-        queuePublisherService.PublishMessage(QUEUE_NAME, conciliationDto);
+        queuePublisherService.PublishMessage(QUEUE_NAME, conciliationDto, null);
     }
 }
