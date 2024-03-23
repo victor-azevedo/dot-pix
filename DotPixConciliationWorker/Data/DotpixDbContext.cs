@@ -20,7 +20,11 @@ public partial class DotPixDbContext(DbContextOptions<DotPixDbContext> options, 
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseNpgsql(optParams.Value.Database.ConnectionString);
+    {
+        optionsBuilder
+            .UseNpgsql(optParams.Value.Database.ConnectionString);
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
