@@ -38,7 +38,7 @@ app.MapPatch("/payments/pix", (TransferStatusDTO dto) =>
     return Results.Accepted();
 });
 
-app.MapPatch("/conciliation", (ConciliationBalanceDto dto) =>
+app.MapPost("/conciliation", (ConciliationBalanceDto dto) =>
 {
     Console.WriteLine(
         $"\n***************************" +
@@ -69,9 +69,15 @@ app.MapGet("/health", () =>
     return Results.Accepted();
 });
 
-app.UseHttpsRedirection();
+app.MapGet("/health", () =>
+{
+    Console.WriteLine(
+        $"\n***************************" +
+        $"\n--> PSP Mock healthy");
+    return Results.Accepted();
+});
 
-app.MapHealthChecks("/health");
+app.UseHttpsRedirection();
 
 app.Run();
 
