@@ -70,7 +70,7 @@
       APPPARAMETERS__WORKERNAME: Payment Worker 1
       APPPARAMETERS__RABBITMQ__HOSTNAME: rabbitmq
     networks:
-      - dotpix-payment
+      - dotpix-net
       - dotpix-rabbitmq
       - dotpix-db
   
@@ -88,7 +88,25 @@
       APPPARAMETERS__WORKERNAME: Payment Worker 2
       APPPARAMETERS__RABBITMQ__HOSTNAME: rabbitmq
     networks:
-      - dotpix-payment
+      - dotpix-net
+      - dotpix-rabbitmq
+      - dotpix-db
+        
+  conciliationworker1:
+    image: dotpix-conciliation-worker
+    container_name: conciliation-worker1
+    restart: always
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    build:
+      context: .
+      dockerfile: DotPixConciliationWorker/Dockerfile
+    environment:
+      APPPARAMETERS__WORKERNAME: Conciliation Worker 1
+      APPPARAMETERS__RABBITMQ__HOSTNAME: rabbitmq
+    networks:
+      - dotpix-net
       - dotpix-rabbitmq
       - dotpix-db
   
@@ -101,15 +119,15 @@
     ports:
       - 8081:8080
     networks:
-      - dotpix-payment
+      - dotpix-net
 
 networks:
   dotpix-db:
     driver: bridge
     name: net-dotpix-db
-  dotpix-payment:
+  dotpix-net:
     driver: bridge
-    name: net-dotpix-payment
+    name: net-dotpix
   dotpix-rabbitmq:
     driver: bridge
     name: net-dotpix-rabbitmq

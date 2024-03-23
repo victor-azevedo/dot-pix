@@ -15,3 +15,7 @@
   paymentworker2:
     environment:
       DOTNET_ENVIRONMENT: LoadTest
+      
+  conciliationworker1:
+    environment:
+      DOTNET_ENVIRONMENT: LoadTest
