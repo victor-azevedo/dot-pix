@@ -26,7 +26,7 @@ app.MapPost("/payments/pix", (TransferStatus dto) =>
     Console.WriteLine($"This operation will return in {timeToWait} ms");
     Thread.Sleep(timeToWait);
 
-    return Results.Ok();
+    return Results.Accepted();
 });
 
 app.MapPatch("/payments/pix", (TransferStatusDTO dto) =>
@@ -35,7 +35,18 @@ app.MapPatch("/payments/pix", (TransferStatusDTO dto) =>
         $"\n***************************" +
         $"\n--> Payment processed" +
         $"\n\tID: '{dto.PaymentId}' STATUS: '{dto.Status}'");
-    return Results.NoContent();
+    return Results.Accepted();
+});
+
+app.MapPatch("/conciliation", (ConciliationBalanceDto dto) =>
+{
+    Console.WriteLine(
+        $"\n***************************" +
+        $"\n--> Conciliation balance received" +
+        $"\n\tCount of 'databaseToFile': '{dto.DatabaseToFile.Count}'" +
+        $"\n\tCount of 'fileToDatabase': '{dto.FileToDatabase.Count}'" +
+        $"\n\tCount of 'differentStatus': '{dto.DifferentStatus.Count}'");
+    return Results.Accepted();
 });
 
 app.UseHttpsRedirection();
