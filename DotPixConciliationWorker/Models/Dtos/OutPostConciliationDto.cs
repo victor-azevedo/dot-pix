@@ -2,16 +2,16 @@ using System.Text.Json.Serialization;
 
 namespace DotPixConciliationWorker.Models.Dtos;
 
-public class ConciliationDto
+public class OutPostConciliationDto
 {
     [JsonPropertyName("databaseToFile")]
-    public List<PaymentFileDto> DatabaseToFile { get; set; }
+    public HashSet<PaymentFileDto> DatabaseToFile { get; set; }
 
     [JsonPropertyName("fileToDatabase")]
-    public List<PaymentFileDto> FileToDatabase { get; set; }
+    public HashSet<PaymentFileDto> FileToDatabase { get; set; }
 
     [JsonPropertyName("differentStatus")]
-    public List<PaymentIdDto> DifferentStatus { get; set; }
+    public HashSet<PaymentIdDto> DifferentStatus { get; set; }
 }
 
 public class PaymentIdDto
