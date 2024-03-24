@@ -11,8 +11,8 @@ public class PixKeyService(
     PaymentProviderAccountRepository paymentProviderAccountRepository,
     PixKeyRepository pixKeyRepository)
 {
-    private const int MaxUserPixKeyAllowed = 20;
-    private const int MaxUserPixKeyPerPspAllowed = 5;
+    private const int MAX_USER_PIX_KEY_ALLOWED = 20;
+    private const int MAX_USER_PIX_KEY_PER_PSP_ALLOWED = 5;
 
     public async Task Create(InPostKeysDto inPostKeysDto)
     {
@@ -66,8 +66,8 @@ public class PixKeyService(
 
     private void ValidateMaximumUserPixKey(List<PixKey> allUserPixKeys)
     {
-        if (allUserPixKeys.Count >= MaxUserPixKeyAllowed)
-            throw new ConflictException($"Maximum allowed keys ({MaxUserPixKeyAllowed}) reached for the user.");
+        if (allUserPixKeys.Count >= MAX_USER_PIX_KEY_ALLOWED)
+            throw new ConflictException($"Maximum allowed keys ({MAX_USER_PIX_KEY_ALLOWED}) reached for the user.");
     }
 
     private void ValidateMaximumUserPixKeyByPsp(List<PaymentProviderAccount> allUserAccounts, int paymentProviderId)
@@ -76,9 +76,9 @@ public class PixKeyService(
             .Where(account => account.PaymentProviderId == paymentProviderId)
             .Sum(account => account.PixKey.Count);
 
-        if (userPixKeyCountForThisPaymentProvider >= MaxUserPixKeyPerPspAllowed)
+        if (userPixKeyCountForThisPaymentProvider >= MAX_USER_PIX_KEY_PER_PSP_ALLOWED)
             throw new ConflictException(
-                $"Maximum allowed keys ({MaxUserPixKeyPerPspAllowed}) reached for the user by Payment Provider..");
+                $"Maximum allowed keys ({MAX_USER_PIX_KEY_PER_PSP_ALLOWED}) reached for the user by Payment Provider..");
     }
 
     private void ValidatePixKeyIsUnique()
