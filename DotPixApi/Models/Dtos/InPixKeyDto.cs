@@ -6,10 +6,10 @@ namespace DotPixApi.Models.Dtos;
 public class InPixKeyDto : IValidatableObject
 {
     [Required(ErrorMessage = "Field 'value' is required")]
-    public string Value { get; set; }
+    public required string Value { get; set; }
 
     [Required(ErrorMessage = "Field 'type' is required")]
-    public string Type { get; set; }
+    public required string Type { get; set; }
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {

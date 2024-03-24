@@ -4,9 +4,9 @@ namespace DotPixApi.Models.Dtos;
 
 public class InPostKeysDto : IValidatableObject
 {
-    public InPixKeyDto Key { get; set; }
-    public InUserDto User { get; set; }
-    public InAccountDto Account { get; set; }
+    public required InPixKeyDto Key { get; set; }
+    public required InUserDto User { get; set; }
+    public required InAccountDto Account { get; set; }
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
