@@ -88,13 +88,22 @@ public class PixKeyService(
 
     public async Task<OutGetPixKeyDto> FindKeyByTypeAndValue(string typeStr, string value)
     {
-        var pixKeyType = PixKey.ParsePixKeyType(typeStr);
+        var key = await pixKeyRepository.FindByValueIncludeAccount(value);
+        
+        if (key == null)
+            throw new PixKeyNotFoundException();
 
-        var key = await pixKeyRepository.FindByTypeAndValueIncludeAccount(pixKeyType, value);
+        ValidatePixKeyTypes(key, typeStr);
 
         var response = new OutGetPixKeyDto(key);
 
         return response;
+    }
+
+    private void ValidatePixKeyTypes(PixKey key, string typeStr)
+    {
+        if (!string.Equals(typeStr, key.Type.ToString(), StringComparison.CurrentCultureIgnoreCase))
+            throw new ConflictException($"This type does not correspond to the key");
     }
 
     public async Task<PixKey> FindByTypeAndValueOrError(string typeStr, string value)
