@@ -19,6 +19,8 @@ public class PaymentQueueConsumer(
 {
     public async Task Watch(CancellationToken stoppingToken)
     {
+        const int MAX_REQUEUE = 3;
+
         var factory = new ConnectionFactory { HostName = options.Value.RabbitMq.HostName };
         using var connection = factory.CreateConnection();
         using var channel = connection.CreateModel();
@@ -51,7 +53,7 @@ public class PaymentQueueConsumer(
                 isPaymentUpdatedHeader =
                     bool.Parse(ea.BasicProperties.Headers["isPaymentUpdated"].ToString() ?? string.Empty);
 
-                if (pspRetryCountHeader > 5)
+                if (pspRetryCountHeader > MAX_REQUEUE)
                     throw new TaskCanceledException("Maximum connection retry attempts to PSP reached.");
 
                 logger.LogInformation($"--> Received payment: '{payment.PaymentId}'");
@@ -106,19 +108,17 @@ public class PaymentQueueConsumer(
             {
                 logger.LogError(e.Message);
                 logger.LogError($"\t - Payment ID:'{payment!.PaymentId}' Timeout to PSP");
-                if (!isPaymentUpdatedHeader)
-                {
-                    payment.Status = PaymentStatus.FAILED;
-                    isPaymentUpdatedHeader = await paymentRepository.UpdatePaymentStatus(payment);
-                    logger.LogInformation(
-                        $"\t - Payment ID:'{payment.PaymentId}' - Status: '{payment.Status}' updated in DB: {isPaymentUpdatedHeader}");
-                    
-                    await paymentProviderOrigin.HandlePaymentToOrigin(payment);
-                    logger.LogInformation(
-                        $"\t - Payment ID:'{payment.PaymentId}' sent to PSP Origin - Status: '{payment.Status}'");
-                }
+
+                payment.Status = PaymentStatus.FAILED;
+                isPaymentUpdatedHeader = await paymentRepository.UpdatePaymentStatus(payment);
+                logger.LogInformation(
+                    $"\t - Payment ID:'{payment.PaymentId}' - Status: '{payment.Status}' updated in DB: {isPaymentUpdatedHeader}");
 
                 channel.BasicAck(ea.DeliveryTag, false);
+
+                await paymentProviderOrigin.HandlePaymentToOrigin(payment);
+                logger.LogInformation(
+                    $"\t - Payment ID:'{payment.PaymentId}' sent to PSP Origin - Status: '{payment.Status}'");
             }
             catch (Exception e)
             {
