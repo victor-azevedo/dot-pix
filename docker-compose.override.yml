@@ -1,17 +1,20 @@
 ﻿services:
-  db:
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-  
-  api:
-    environment:
-      ASPNETCORE_ENVIRONMENT: LoadTest
-  
-  paymentworker1:
-    environment:
-      DOTNET_ENVIRONMENT: LoadTest
-  
-  paymentworker2:
-    environment:
-      DOTNET_ENVIRONMENT: LoadTest
+    db:
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+
+    api:
+        environment:
+            ASPNETCORE_ENVIRONMENT: Development
+            APPPARAMETERS__DATABASE__CONNECTIONSTRING: Host=db;Port=5432;Username=postgres;Password=postgres;Database=dotpix_dev
+
+    paymentworker1:
+        environment:
+            DOTNET_ENVIRONMENT: Development
+            APPPARAMETERS__DATABASE__CONNECTIONSTRING: Host=db;Port=5432;Username=postgres;Password=postgres;Database=dotpix_dev
+
+    paymentworker2:
+        environment:
+            DOTNET_ENVIRONMENT: Development
+            APPPARAMETERS__DATABASE__CONNECTIONSTRING: Host=db;Port=5432;Username=postgres;Password=postgres;Database=dotpix_dev
