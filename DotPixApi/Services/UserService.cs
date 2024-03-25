@@ -6,7 +6,7 @@ namespace DotPixApi.Services;
 
 public class UserService(UserRepository userRepository)
 {
-    public async Task<User> FindByCpf(string cpf)
+    public async Task<User> FindByCpfThrow(string cpf)
     {
         var user = await userRepository.FindByCpf(cpf);
         if (user == null)
