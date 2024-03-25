@@ -3,13 +3,22 @@ export const API_URL = "http://localhost:8080";
 export const isReportSummary = false;
 
 export const defaultOptions = {
-    vus: 20,
-    duration: "30s",
-};
-
-export function getRandomElement(array) {
-    return array[Math.floor(Math.random() * array.length)];
-}
+        scenarios: {
+            normal_usage: {
+                executor: "shared-iterations",
+                vus: 40,
+                iterations: 5000,
+                maxDuration: "60s",
+            }
+        },
+        thresholds: {
+            http_req_failed: ["rate<0.02"],
+            http_req_duration:
+                ["p(95)<500"],
+        }
+        ,
+    }
+;
 
 export function formatDate(date = new Date()) {
     const year = date.getFullYear();

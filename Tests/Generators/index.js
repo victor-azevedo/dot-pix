@@ -9,11 +9,11 @@ async function createData() {
     try {
         console.log("\n*****************************************\n");
         console.log("Creating data...");
-        // await createUsersJson();
-        // await createPaymentProvidersJson();
-        // await createPaymentProviderTokensJson();
-        // await createAccountsJson();
-        // await createKeysJson();
+        await createUsersJson();
+        await createPaymentProvidersJson();
+        await createPaymentProviderTokensJson();
+        await createAccountsJson();
+        await createKeysJson();
         await createPaymentsJson();
         console.log("\n*****************************************\n");
     } catch (error) {

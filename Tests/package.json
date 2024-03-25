@@ -1,25 +1,27 @@
 {
-    "name": "data-generator",
-    "version": "1.0.0",
-    "type": "module",
-    "main": "./DataGenerator/seedGenerator.js",
-    "scripts": {
-        "generate": "node ./Generators/index.js",
-        "seed": "node ./seedDbTest.js",
-        "clean-seed": "npm run seed clean",
-        "generate-clean-seed": "npm run generate && npm run clean-seed",
-        "load-test-get-health": "node Generators/RequestBody/getKeysGenerator.js && k6 run ./.k6/getHealthTest.js  --out json=./.k6/reports/getHealthTestReport.json",
-        "load-test-get-keys": "node Generators/RequestBody/getKeysGenerator.js && k6 run ./.k6/getKeysTest.js  --out json=./.k6/reports/getKeysTestReport.json",
-        "load-test-post-keys": "node Generators/RequestBody/postKeysGenerator.js && k6 run ./.k6/postKeysTest.js  --out json=./.k6/reports/postKeysTestReport.json",
-        "load-test-post-payments": "node Generators/RequestBody/postPaymentsGenerator.js && k6 run ./.k6/postPaymentsTest.js  --out json=./.k6/reports/postPaymentsTestReport.json"
-    },
-    "devDependencies": {
-        "@faker-js/faker": "^8.4.1",
-        "enforce-unique": "^1.3.0"
-    },
-    "dependencies": {
-        "dotenv": "^16.4.5",
-        "knex": "^3.1.0",
-        "pg": "^8.11.3"
-    }
+  "name": "data-generator",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./DataGenerator/seedGenerator.js",
+  "scripts": {
+    "data:clean": "node ./cleanDb.js",
+    "data:generate": "node ./Generators/index.js",
+    "data:seed": "node ./seedDb.js",
+    "data:generate-and-seed": "npm run data:generate && npm run data:seed",
+    "data:generate-request-body": "node ./Generators/RequestsBody/index.js",
+    "test:prepare": "npm run data:generate-and-seed && npm run data:generate-request-body",
+    "test:load:get-health": "k6 run ./.k6/getHealthTest.js",
+    "test:load:get-keys": "k6 run ./.k6/getKeysTest.js",
+    "test:load:post-keys": "k6 run ./.k6/postKeysTest.js",
+    "test:load:post-payments": "k6 run ./.k6/postPaymentsTest.js"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
+    "enforce-unique": "^1.3.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "knex": "^3.1.0",
+    "pg": "^8.11.3"
+  }
 }

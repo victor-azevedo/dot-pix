@@ -1,6 +1,6 @@
 import * as dotenv from "dotenv";
 import knex from "knex";
-import { BODY_TEST_FILE_PATH, BODY_TEST_LENGTH, saveDataToJson } from "../../utils.js";
+import {BODY_TEST_FILE_PATH, BODY_TEST_LENGTH, saveDataToJson} from "../../utils.js";
 
 dotenv.config();
 
@@ -9,7 +9,7 @@ const db = knex({
     connection: process.env.DATABASE_URL,
 });
 
-async function init() {
+export default async function createBody() {
     try {
         const users = await db.select("cpf").from("users").limit(BODY_TEST_LENGTH);
 
@@ -43,5 +43,3 @@ async function init() {
         await db.destroy();
     }
 }
-
-await init();

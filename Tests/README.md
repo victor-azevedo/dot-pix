@@ -1,1 +1,1 @@
-dotnet ef database update -- --environment Test
+dotnet ef database update -- --environment LoadTest

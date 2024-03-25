@@ -1,7 +1,7 @@
-import { faker } from "@faker-js/faker";
+import {faker} from "@faker-js/faker";
 import * as dotenv from "dotenv";
 import knex from "knex";
-import { BODY_TEST_FILE_PATH, BODY_TEST_LENGTH, saveDataToJson } from "../../utils.js";
+import {BODY_TEST_FILE_PATH, BODY_TEST_LENGTH, saveDataToJson} from "../../utils.js";
 
 dotenv.config();
 
@@ -10,7 +10,7 @@ const db = knex({
     connection: process.env.DATABASE_URL,
 });
 
-async function init() {
+export default async function createBody() {
     try {
         const [user] = await db.select("id", "cpf").from("users").limit(1);
 
@@ -20,7 +20,7 @@ async function init() {
             .where("user_id", user.id)
             .limit(1);
 
-        const [{ token }] = await db
+        const [{token}] = await db
             .select("token")
             .from("payment_provider_tokens")
             .where("payment_provider_id", account.payment_provider_id)
@@ -60,5 +60,3 @@ async function init() {
         await db.destroy();
     }
 }
-
-await init();

@@ -1,6 +1,6 @@
 import * as dotenv from "dotenv";
 import knex from "knex";
-import { SEED_FILE_PATH, addDateToData, readDataFromJson } from "./utils.js";
+import {SEED_FILE_PATH, addDateToData, readDataFromJson} from "./utils.js";
 
 dotenv.config();
 
@@ -9,14 +9,8 @@ const db = knex({
     connection: process.env.DATABASE_URL,
 });
 
-const args = process.argv.slice(2);
-const isToCleanDb = args[0] === "clean";
-
 async function init() {
     try {
-        if (isToCleanDb) {
-            await clearDb();
-        }
         await seedUsers();
         await seedPaymentsProviders();
         await seedPaymentsProviderTokens();
@@ -24,9 +18,6 @@ async function init() {
         await seedPixKeys();
         await seedPayments();
     } catch (error) {
-        if (isToCleanDb) {
-            await clearDb();
-        }
         console.error("An error occurred during database initialization:", error);
     } finally {
         await db.destroy();
@@ -107,18 +98,24 @@ async function seedPixKeys() {
 async function seedPayments() {
     const tableName = "payments";
 
+    const ACCOUNTS_NUMBER = 2
+
+    function choiceAccount(number) {
+        return number % ACCOUNTS_NUMBER;
+    }
+
     const payments = await readDataFromJson(`${SEED_FILE_PATH}/payments.json`);
 
-    const paymentProvidersAccountsDb = await db.select("id").from("payment_provider_accounts");
+    const paymentProvidersAccountsDb = await db.select("id").from("payment_provider_accounts").limit(ACCOUNTS_NUMBER);
 
     const pixKeysDb = await db.select("id").from("pix_keys");
 
-    if (payments.length > pixKeysDb.length || payments.length > paymentProvidersAccountsDb.length)
+    if (payments.length > pixKeysDb.length)
         throw new Error("Key array size mismatch: Verify the number of accounts.");
 
     const paymentsToDb = payments.map((payment, index) => ({
         ...payment,
-        account_origin_id: paymentProvidersAccountsDb[index].id,
+        account_origin_id: paymentProvidersAccountsDb[choiceAccount(index)].id,
         pix_key_destiny_id: pixKeysDb[pixKeysDb.length - index - 1].id,
     }));
 
@@ -132,19 +129,6 @@ async function seedDb(tableName, data) {
 
     console.log(`Seeded '${tableName}' table with success!`);
     console.log("\n*****************************************\n");
-}
-
-async function clearDb() {
-    console.log("\n*****************************************");
-    console.log("Deleting database tables...");
-    await db("payments").del();
-    await db("pix_keys").del();
-    await db("payment_provider_accounts").del();
-    await db("payment_provider_tokens").del();
-    await db("payment_providers").del();
-    await db("users").del();
-    console.log("Database cleared successfully.");
-    console.log("*****************************************\n");
 }
 
 await init();
