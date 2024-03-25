@@ -5,7 +5,9 @@ The DotPix project is an application developed to meet the demands of the Pix in
 
 ## Components
 **DotPix API**: Core of the DotPix application. It is a Web API REST developed in .NET Core 8.0.2, with layered architecture and token authentication. Responsible for receiving requests from Payment Service Providers (PSPs), validating and responding, and forwarding long or third-party dependent processing to specific workers.
+
 **DotPix Payment Worker**: Worker Service application developed in .NET Core 8.0.2. Receives already validated and processed data from the DotPix API regarding payment requests from an originating PSP, confirms the payment with a destination PSP API, and updates the payment status based on the destination PSP's result.
+
 **DotPix Conciliation Worker**: Worker Service application developed in .NET Core 8.0.2. Responsible for the reconciliation process between operations performed by the DotPix API and operations recorded by the PSP.
 
 ## Technologies Used
