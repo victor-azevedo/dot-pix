@@ -16,7 +16,7 @@ public class PixKeyService(
 
     public async Task Create(InPostKeysDto inPostKeysDto)
     {
-        var user = await userService.FindByCpf(inPostKeysDto.User.Cpf);
+        var user = await userService.FindByCpfThrow(inPostKeysDto.User.Cpf);
 
         var allUserAccounts = await paymentProviderAccountRepository.FindByUser(user);
 
@@ -86,14 +86,14 @@ public class PixKeyService(
         // Validates uniqueness in the database using the UNIQUE constraint on the @value column in the @pix-key table.
     }
 
-    public async Task<OutGetPixKeyDto> FindKeyByTypeAndValue(string typeStr, string value)
+    public async Task<OutGetPixKeyDto> FindByTypeAndValueIncludeAccountOrThrow(InPixKeyDto inPixKey)
     {
-        var key = await pixKeyRepository.FindByValueIncludeAccount(value);
-        
+        var key = await pixKeyRepository.FindByValueIncludeAccount(inPixKey.Value);
+
         if (key == null)
             throw new PixKeyNotFoundException();
 
-        ValidatePixKeyTypes(key, typeStr);
+        ValidatePixKeyTypes(key, inPixKey.Type);
 
         var response = new OutGetPixKeyDto(key);
 
@@ -106,14 +106,14 @@ public class PixKeyService(
             throw new ConflictException($"This type does not correspond to the key");
     }
 
-    public async Task<PixKey> FindByTypeAndValueOrError(string typeStr, string value)
+    public async Task<PixKey> FindByTypeAndValueOrThrow(InPixKeyDto inPixKey)
     {
-        var pixKeyType = PixKey.ParsePixKeyType(typeStr);
-
-        var key = await pixKeyRepository.FindByTypeAndValue(pixKeyType, value);
+        var key = await pixKeyRepository.FindByTypeAndValue(inPixKey.Value);
 
         if (key == null)
             throw new PixKeyNotFoundException();
+
+        ValidatePixKeyTypes(key, inPixKey.Type);
 
         return key;
     }

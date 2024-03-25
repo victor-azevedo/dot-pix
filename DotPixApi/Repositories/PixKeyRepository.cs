@@ -30,15 +30,15 @@ public class PixKeyRepository(AppDbContext context)
             .Include(pk => pk.PaymentProviderAccount)
             .ThenInclude(ac => ac.User)
             .FirstOrDefaultAsync(
-                pixKey =>pixKey.Value == value);
+                pixKey => pixKey.Value == value);
 
         return key;
     }
 
-    public async Task<PixKey?> FindByTypeAndValue(PixKeyTypes pixKeyType, string value)
+    public async Task<PixKey?> FindByTypeAndValue(string value)
     {
         var key = await context.PixKeys.FirstOrDefaultAsync(
-            pk => pk.Type == pixKeyType && pk.Value == value);
+            pk => pk.Value == value);
         return key;
     }
 }
