@@ -15,11 +15,7 @@ public class PaymentProviderOriginService(
 {
     public async Task HandlePaymentToOrigin(InPaymentQueueDto payment)
     {
-        var dbContext = await dbContextFactory.CreateDbContextAsync();
-        var paymentProviderOrigin = await dbContext.PaymentProviders
-            .FirstOrDefaultAsync(provider => provider.Id == payment.Origin.Account.BankId);
-
-        var pspBaseUrl = paymentProviderOrigin!.ApiUrl;
+        var pspBaseUrl = payment.Origin.Account.BankApiUrl;
         if (env.IsDevelopment())
             pspBaseUrl = options.Value.PspMockUrl;
 

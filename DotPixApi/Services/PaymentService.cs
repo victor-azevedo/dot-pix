@@ -41,6 +41,8 @@ public class PaymentService(
 
         await paymentRepository.Create(payment);
 
+        payment.AccountOrigin.PaymentProvider = accountOrigin.PaymentProvider;
+
         SendPaymentToQueue(payment);
 
         var paymentResponse = new OutPostPaymentDto(payment);

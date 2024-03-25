@@ -11,7 +11,7 @@ public class InPostPaymentDto
     public required InPaymentDestinyDto Destiny { get; set; }
 
     [Required(ErrorMessage = "Field 'amount' is required")]
-    public int Amount { get; set; }
+    public required int Amount { get; set; }
 
     public string? Description { get; set; }
 }
