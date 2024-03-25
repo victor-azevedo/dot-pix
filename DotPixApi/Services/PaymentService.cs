@@ -14,29 +14,24 @@ public class PaymentService(
     PaymentRepository paymentRepository,
     PaymentQueuePublisher paymentQueuePublisher)
 {
-    private const int IDEMPOTENCY_PAYMENT_TIME_TOLERANCE = 30;
-    private const int PAYMENT_PROCESSING_TIME_LIMIT_SECONDS = 120;
+    private const int IDEMPOTENCY_PAYMENT_SECONDS_TOLERANCE = 30;
+    private const int PAYMENT_PROCESSING_SECONDS_LIMIT = 120;
 
     public async Task<OutPostPaymentDto> Create(InPostPaymentDto inPostPaymentDto)
     {
         var userCpfBody = inPostPaymentDto.Origin.User.Cpf;
-        var userOrigin = await userService.FindByCpf(userCpfBody);
+        var userOrigin = await userService.FindByCpfThrow(userCpfBody);
 
         var paymentProviderId = httpContextService.GetPaymentProviderIdFromHttpContext();
-        var accountBody = inPostPaymentDto.Origin.Account;
-        var accountOrigin = await paymentProviderAccountService
-            .FindByUserAndPspIdAndAccountOrError(userOrigin, paymentProviderId, accountBody);
+        var accountOrigin =
+            await paymentProviderAccountService.FindByUserAndPspIdAndAccountOrThrow(userOrigin, paymentProviderId,
+                inPostPaymentDto.Origin.Account);
 
-        var keyTypeBody = inPostPaymentDto.Destiny.Key.Type;
-        var keyValueBody = inPostPaymentDto.Destiny.Key.Value;
-        var pixKeyDestiny = await pixKeyService.FindByTypeAndValueOrError(keyTypeBody, keyValueBody);
+        var pixKeyDestiny = await pixKeyService.FindByTypeAndValueOrThrow(inPostPaymentDto.Destiny.Key);
 
-        if (pixKeyDestiny.PaymentProviderAccountId == accountOrigin.Id)
-            throw new ConflictException("Destiny account must be different origin account");
+        ValidatePixKeyIsNotAccountOrigin(pixKeyDestiny, accountOrigin);
 
-        var amount = inPostPaymentDto.Amount;
-        var description = inPostPaymentDto.Description;
-        var payment = new Payments(amount: amount, description: description)
+        var payment = new Payments(amount: inPostPaymentDto.Amount, description: inPostPaymentDto.Description)
         {
             AccountOrigin = accountOrigin,
             PixKeyDestiny = pixKeyDestiny
@@ -46,25 +41,38 @@ public class PaymentService(
 
         await paymentRepository.Create(payment);
 
-        // Publish in Queue
-        var paymentProcessingExpireAt =
-            payment.CreatedAt.AddSeconds(PAYMENT_PROCESSING_TIME_LIMIT_SECONDS);
-        var paymentQueueDtoDto = new OutPaymentQueueDto(payment, paymentProcessingExpireAt);
-        paymentQueuePublisher.PublishMessage(paymentQueueDtoDto);
+        SendPaymentToQueue(payment);
 
         var paymentResponse = new OutPostPaymentDto(payment);
+
         return paymentResponse;
+    }
+
+    private void ValidatePixKeyIsNotAccountOrigin(PixKey pixKeyDestiny, PaymentProviderAccount accountOrigin)
+    {
+        if (pixKeyDestiny.PaymentProviderAccountId == accountOrigin.Id)
+            throw new ConflictException("Destiny account must be different origin account");
     }
 
     private async Task ValidatePaymentIsNotRepeated(Payments payment)
     {
         var idempotencyKey = new PaymentIdempotencyKey(payment);
-        var timeTolerance = DateTime.UtcNow.AddSeconds(-IDEMPOTENCY_PAYMENT_TIME_TOLERANCE);
+        var timeTolerance = DateTime.UtcNow.AddSeconds(-IDEMPOTENCY_PAYMENT_SECONDS_TOLERANCE);
 
         var repeatedPayment = await paymentRepository.FindByIdempotencyKeyAndTimeTolerance(idempotencyKey,
             timeTolerance);
         if (repeatedPayment != null)
             throw new ConflictException(
                 "Unable to proceed with the payment: A similar payment has already been initiated or processed.");
+    }
+
+    private void SendPaymentToQueue(Payments payment)
+    {
+        var paymentProcessingExpireAt =
+            payment.CreatedAt.AddSeconds(PAYMENT_PROCESSING_SECONDS_LIMIT);
+
+        var paymentQueueDtoDto = new OutPaymentQueueDto(payment, paymentProcessingExpireAt);
+
+        paymentQueuePublisher.PublishMessage(paymentQueueDtoDto);
     }
 }
