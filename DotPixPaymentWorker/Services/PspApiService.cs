@@ -28,6 +28,9 @@ public class PspApiService(ILogger<PspApiService> logger) : IPspApiService
         var postPaymentPixUrl = $"{pspApiBaseUrl}/payments/pix";
 
         var content = ParseObjToContent(paymentDestiny);
+        Console.WriteLine(postPaymentPixUrl);
+        Console.WriteLine(JsonSerializer.Serialize(content));
+
         var response = await client.PostAsync(postPaymentPixUrl, content);
 
         return response.IsSuccessStatusCode;

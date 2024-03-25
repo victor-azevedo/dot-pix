@@ -112,6 +112,10 @@ public class PaymentQueueConsumer(
                     isPaymentUpdatedHeader = await paymentRepository.UpdatePaymentStatus(payment);
                     logger.LogInformation(
                         $"\t - Payment ID:'{payment.PaymentId}' - Status: '{payment.Status}' updated in DB: {isPaymentUpdatedHeader}");
+                    
+                    await paymentProviderOrigin.HandlePaymentToOrigin(payment);
+                    logger.LogInformation(
+                        $"\t - Payment ID:'{payment.PaymentId}' sent to PSP Origin - Status: '{payment.Status}'");
                 }
 
                 channel.BasicAck(ea.DeliveryTag, false);

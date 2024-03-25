@@ -16,8 +16,6 @@ public class PaymentProviderOriginService(
     public async Task HandlePaymentToOrigin(InPaymentQueueDto payment)
     {
         var pspBaseUrl = payment.Origin.Account.BankApiUrl;
-        if (env.IsDevelopment())
-            pspBaseUrl = options.Value.PspMockUrl;
 
         var contentToDestiny = new OutPatchOriginDto(payment);
 

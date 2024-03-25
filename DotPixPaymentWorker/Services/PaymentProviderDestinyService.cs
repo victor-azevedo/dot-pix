@@ -25,8 +25,6 @@ public class PaymentProviderDestinyService(
             .FirstOrDefaultAsync(account => account.Id == payment.Destiny.AccountDestinyId);
 
         var pspBaseUrl = accountWithPaymentProviderDestiny!.PaymentProvider.ApiUrl;
-        if (env.IsDevelopment())
-            pspBaseUrl = options.Value.PspMockUrl;
 
         var contentToDestiny = new OutPostDestinyDto(payment);
 
