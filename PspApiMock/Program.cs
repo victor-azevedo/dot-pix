@@ -69,14 +69,6 @@ app.MapGet("/health", () =>
     return Results.Accepted();
 });
 
-app.MapGet("/health", () =>
-{
-    Console.WriteLine(
-        $"\n***************************" +
-        $"\n--> PSP Mock healthy");
-    return Results.Accepted();
-});
-
 app.UseHttpsRedirection();
 
 app.Run();
