@@ -86,14 +86,14 @@ public class PixKeyService(
         // Validates uniqueness in the database using the UNIQUE constraint on the @value column in the @pix-key table.
     }
 
-    public async Task<OutGetPixKeyDto> FindByTypeAndValueIncludeAccountOrThrow(InPixKeyDto inPixKey)
+    public async Task<OutGetPixKeyDto> FindByTypeAndValueIncludeAccountOrThrow(string type, string value)
     {
-        var key = await pixKeyRepository.FindByValueIncludeAccount(inPixKey.Value);
+        var key = await pixKeyRepository.FindByValueIncludeAccount(value);
 
         if (key == null)
             throw new PixKeyNotFoundException();
 
-        ValidatePixKeyTypes(key, inPixKey.Type);
+        ValidatePixKeyTypes(key, type);
 
         var response = new OutGetPixKeyDto(key);
 

@@ -17,9 +17,9 @@ public class PixKeyController(PixKeyService pixKeyService) : ControllerBase
     }
 
     [HttpGet("{type}/{value}")]
-    public async Task<IActionResult> FindKey(InPixKeyDto inPixKey)
+    public async Task<IActionResult> FindKey(string type, string value)
     {
-        var response = await pixKeyService.FindByTypeAndValueIncludeAccountOrThrow(inPixKey);
+        var response = await pixKeyService.FindByTypeAndValueIncludeAccountOrThrow(type, value);
 
         return Ok(response);
     }
