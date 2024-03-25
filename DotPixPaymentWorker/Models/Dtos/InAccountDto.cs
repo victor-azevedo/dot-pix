@@ -4,5 +4,6 @@ public class InAccountDto()
 {
     public string Number { get; set; }
     public string Agency { get; set; }
-    public int BankId { get; set; }
+    public string BankName { get; set; }
+    public string BankApiUrl { get; set; }
 }

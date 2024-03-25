@@ -25,7 +25,7 @@ public class AccountDTO
 {
     public required string Number { get; set; }
     public required string Agency { get; set; }
-    public required int BankId { get; set; }
+    public required string BankName { get; set; }
 }
 
 public class DestinyDTO

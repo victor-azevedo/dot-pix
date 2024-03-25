@@ -11,12 +11,12 @@ public class PixKeyService(
     PaymentProviderAccountRepository paymentProviderAccountRepository,
     PixKeyRepository pixKeyRepository)
 {
-    private const int MaxUserPixKeyAllowed = 20;
-    private const int MaxUserPixKeyPerPspAllowed = 5;
+    private const int MAX_USER_PIX_KEY_ALLOWED = 20;
+    private const int MAX_USER_PIX_KEY_PER_PSP_ALLOWED = 5;
 
     public async Task Create(InPostKeysDto inPostKeysDto)
     {
-        var user = await userService.FindByCpf(inPostKeysDto.User.Cpf);
+        var user = await userService.FindByCpfThrow(inPostKeysDto.User.Cpf);
 
         var allUserAccounts = await paymentProviderAccountRepository.FindByUser(user);
 
@@ -66,8 +66,8 @@ public class PixKeyService(
 
     private void ValidateMaximumUserPixKey(List<PixKey> allUserPixKeys)
     {
-        if (allUserPixKeys.Count >= MaxUserPixKeyAllowed)
-            throw new ConflictException($"Maximum allowed keys ({MaxUserPixKeyAllowed}) reached for the user.");
+        if (allUserPixKeys.Count >= MAX_USER_PIX_KEY_ALLOWED)
+            throw new ConflictException($"Maximum allowed keys ({MAX_USER_PIX_KEY_ALLOWED}) reached for the user.");
     }
 
     private void ValidateMaximumUserPixKeyByPsp(List<PaymentProviderAccount> allUserAccounts, int paymentProviderId)
@@ -76,9 +76,9 @@ public class PixKeyService(
             .Where(account => account.PaymentProviderId == paymentProviderId)
             .Sum(account => account.PixKey.Count);
 
-        if (userPixKeyCountForThisPaymentProvider >= MaxUserPixKeyPerPspAllowed)
+        if (userPixKeyCountForThisPaymentProvider >= MAX_USER_PIX_KEY_PER_PSP_ALLOWED)
             throw new ConflictException(
-                $"Maximum allowed keys ({MaxUserPixKeyPerPspAllowed}) reached for the user by Payment Provider..");
+                $"Maximum allowed keys ({MAX_USER_PIX_KEY_PER_PSP_ALLOWED}) reached for the user by Payment Provider..");
     }
 
     private void ValidatePixKeyIsUnique()
@@ -86,25 +86,34 @@ public class PixKeyService(
         // Validates uniqueness in the database using the UNIQUE constraint on the @value column in the @pix-key table.
     }
 
-    public async Task<OutGetPixKeyDto> FindKeyByTypeAndValue(string typeStr, string value)
+    public async Task<OutGetPixKeyDto> FindByTypeAndValueIncludeAccountOrThrow(string type, string value)
     {
-        var pixKeyType = PixKey.ParsePixKeyType(typeStr);
+        var key = await pixKeyRepository.FindByValueIncludeAccount(value);
 
-        var key = await pixKeyRepository.FindByTypeAndValueIncludeAccount(pixKeyType, value);
+        if (key == null)
+            throw new PixKeyNotFoundException();
+
+        ValidatePixKeyTypes(key, type);
 
         var response = new OutGetPixKeyDto(key);
 
         return response;
     }
 
-    public async Task<PixKey> FindByTypeAndValueOrError(string typeStr, string value)
+    private void ValidatePixKeyTypes(PixKey key, string typeStr)
     {
-        var pixKeyType = PixKey.ParsePixKeyType(typeStr);
+        if (!string.Equals(typeStr, key.Type.ToString(), StringComparison.CurrentCultureIgnoreCase))
+            throw new ConflictException($"This type does not correspond to the key");
+    }
 
-        var key = await pixKeyRepository.FindByTypeAndValue(pixKeyType, value);
+    public async Task<PixKey> FindByTypeAndValueOrThrow(InPixKeyDto inPixKey)
+    {
+        var key = await pixKeyRepository.FindByTypeAndValue(inPixKey.Value);
 
         if (key == null)
             throw new PixKeyNotFoundException();
+
+        ValidatePixKeyTypes(key, inPixKey.Type);
 
         return key;
     }

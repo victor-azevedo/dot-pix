@@ -20,11 +20,13 @@ public class PaymentProviderAccountRepository(AppDbContext context)
     public async Task<PaymentProviderAccount?> FindByUserAndAccount(
         User user, int paymentProviderId, InAccountDto account)
     {
-        var userAccount = await context.PaymentProviderAccount.FirstOrDefaultAsync(acc =>
-            acc.UserId == user.Id &&
-            acc.PaymentProviderId == paymentProviderId &&
-            acc.Account == account.Number &&
-            acc.Agency == account.Agency);
+        var userAccount = await context.PaymentProviderAccount
+            .Include(acc => acc.PaymentProvider)
+            .FirstOrDefaultAsync(acc =>
+                acc.UserId == user.Id &&
+                acc.PaymentProviderId == paymentProviderId &&
+                acc.Account == account.Number &&
+                acc.Agency == account.Agency);
 
         return userAccount;
     }

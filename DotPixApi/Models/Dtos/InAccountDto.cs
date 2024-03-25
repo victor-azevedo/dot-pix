@@ -6,11 +6,11 @@ public class InAccountDto
 {
     [Required(ErrorMessage = "Field 'number' is required")]
     [StringLength(20, ErrorMessage = "Maximum length 20 characters")]
-    public string Number { get; set; }
+    public required string Number { get; set; }
 
     [Required(ErrorMessage = "Field 'agency' is required")]
     [StringLength(20, ErrorMessage = "Maximum length 20 characters")]
-    public string Agency { get; set; }
+    public required string Agency { get; set; }
 
     public PaymentProviderAccount ToEntity(User user, int paymentProviderId)
     {

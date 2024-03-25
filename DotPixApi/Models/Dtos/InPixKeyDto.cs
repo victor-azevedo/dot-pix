@@ -6,10 +6,10 @@ namespace DotPixApi.Models.Dtos;
 public class InPixKeyDto : IValidatableObject
 {
     [Required(ErrorMessage = "Field 'value' is required")]
-    public string Value { get; set; }
+    public required string Value { get; set; }
 
     [Required(ErrorMessage = "Field 'type' is required")]
-    public string Type { get; set; }
+    public required string Type { get; set; }
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
@@ -21,8 +21,8 @@ public class InPixKeyDto : IValidatableObject
         }
 
         // Phone pattern: 11 98765-1234
-        const string phonePattern = @"^\d{2} \d{5}-\d{4}$";
-        bool isKeyTypePhoneAndInvalidPhone = Type.Equals("Phone") && !Regex.IsMatch(Value, phonePattern);
+        const string PHONE_PATTERN = @"^\d{2} \d{5}-\d{4}$";
+        bool isKeyTypePhoneAndInvalidPhone = Type.Equals("Phone") && !Regex.IsMatch(Value, PHONE_PATTERN);
         if (isKeyTypePhoneAndInvalidPhone)
         {
             yield return new ValidationResult(
