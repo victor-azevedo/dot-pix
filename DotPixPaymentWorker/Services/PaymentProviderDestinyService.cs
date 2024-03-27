@@ -1,4 +1,3 @@
-using System.Text.Json;
 using DotPixPaymentWorker.Data;
 using DotPixPaymentWorker.Interfaces;
 using DotPixPaymentWorker.Models.Dtos;

@@ -1,4 +1,3 @@
-using DotPixPaymentWorker.Models;
 using DotPixPaymentWorker.Models.Dtos;
 
 namespace DotPixPaymentWorker.Interfaces;

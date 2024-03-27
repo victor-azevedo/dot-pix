@@ -1,6 +1,5 @@
 using DotPixPaymentWorker.Data;
 using DotPixPaymentWorker.Interfaces;
-using DotPixPaymentWorker.Models;
 using DotPixPaymentWorker.Models.Dtos;
 using Microsoft.EntityFrameworkCore;
 
